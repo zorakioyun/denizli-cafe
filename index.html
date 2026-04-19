@@ -1,100 +1,153 @@
 <!DOCTYPE html>
 <html lang="tr" dir="ltr">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bear Café — Menü</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&family=Noto+Sans+Arabic:wght@400;500&display=swap" rel="stylesheet"/>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body{background:#f5f0e8;font-family:'DM Sans',sans-serif;min-height:100vh;}
-    body.ar{font-family:'Noto Sans Arabic',sans-serif;}
-
-    /* LANG OVERLAY */
-    #lang-overlay{position:fixed;inset:0;background:#1a1209;display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:1.5rem;padding:2rem;}
-    #lang-overlay h2{font-family:'Playfair Display',serif;color:#f5e6c8;font-size:2rem;text-align:center;}
-    #lang-overlay p{color:#a8906e;font-size:12px;text-align:center;line-height:1.8;}
-    .lang-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem;}
-    .lang-btn{padding:.85rem 2rem;border-radius:999px;border:1.5px solid #d4a853;background:transparent;color:#f5e6c8;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit;}
-    .lang-btn:hover{background:#d4a853;color:#1a1209;}
-
-    /* MENU */
-    .menu-wrap{max-width:440px;margin:0 auto;background:#fdfaf5;min-height:100vh;}
-    .menu-hero{background:#1a1209;color:#f5e6c8;padding:2.5rem 1.5rem 2rem;text-align:center;border-radius:0 0 2rem 2rem;}
-    .menu-hero .bear-icon{font-size:3rem;margin-bottom:.5rem;}
-    .menu-hero h1{font-family:'Playfair Display',serif;font-size:2.2rem;letter-spacing:.03em;margin-bottom:.25rem;}
-    .menu-hero p{font-size:11px;color:#a8906e;letter-spacing:.12em;text-transform:uppercase;}
-    .cat-tabs{display:flex;gap:8px;padding:1.25rem 1.25rem .5rem;overflow-x:auto;scrollbar-width:none;}
-    .cat-tabs::-webkit-scrollbar{display:none;}
-    .cat-tab{padding:7px 16px;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;border:1.5px solid #d4a853;color:#a07830;background:transparent;font-family:inherit;transition:all .2s;}
-    .cat-tab.active{background:#1a1209;color:#f5e6c8;border-color:#1a1209;}
-    .category{display:none;padding-bottom:1rem;}
-    .category.active{display:block;}
-    .section-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:#1a1209;padding:1rem 1.5rem .5rem;font-weight:600;}
-    .section-card{background:#fff;border-radius:1rem;margin:0 1rem;border:.5px solid #e8ddd0;overflow:hidden;}
-    .item{display:flex;align-items:center;padding:.75rem 1.25rem;gap:12px;border-bottom:.5px solid #f0e8dc;cursor:pointer;transition:background .15s;}
-    .item:hover{background:#fdf7f0;}
-    .item:last-child{border-bottom:none;}
-    .item-img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#f0e8dc;}
-    .item-info{flex:1;min-width:0;}
-    .item-name{font-size:14px;font-weight:500;color:#1a1209;margin-bottom:2px;}
-    .item-desc{font-size:12px;color:#8a7560;line-height:1.4;}
-    .item-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
-    .item-price{font-size:14px;font-weight:600;color:#a07830;white-space:nowrap;}
-    .item-arrow{font-size:12px;color:#c8b49a;}
-
-    /* WIFI */
-    .wifi-box{margin:1rem;background:#fff;border-radius:1rem;border:.5px solid #e8ddd0;padding:1rem 1.25rem;text-align:center;}
-    .wifi-box .wifi-icon{font-size:1.5rem;margin-bottom:6px;}
-    .wifi-box .wifi-label{font-size:11px;color:#a8906e;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
-    .wifi-box .wifi-name{font-size:14px;font-weight:500;color:#1a1209;margin-bottom:2px;}
-    .wifi-box .wifi-pass{font-size:13px;color:#a07830;font-weight:600;letter-spacing:.08em;}
-    .footer{text-align:center;padding:1rem;font-size:11px;color:#b0a090;}
-
-    /* DETAIL PAGE */
-    #detail-page{display:none;max-width:440px;margin:0 auto;background:#fdfaf5;min-height:100vh;}
-    .detail-back{display:flex;align-items:center;gap:8px;padding:1rem 1.25rem;cursor:pointer;color:#a07830;font-size:14px;font-weight:500;background:#fff;border-bottom:.5px solid #e8ddd0;}
-    .detail-back:hover{background:#fdf7f0;}
-    .detail-photos{display:flex;gap:8px;padding:1rem;overflow-x:auto;scrollbar-width:none;}
-    .detail-photos::-webkit-scrollbar{display:none;}
-    .detail-photo{width:200px;height:200px;border-radius:14px;object-fit:cover;flex-shrink:0;}
-    .detail-photo:first-child{width:100%;height:240px;flex-shrink:0;}
-    .detail-body{padding:0 1rem 2rem;}
-    .detail-name{font-family:'Playfair Display',serif;font-size:1.6rem;color:#1a1209;margin-bottom:.25rem;margin-top:1rem;}
-    .detail-tagline{font-size:13px;color:#8a7560;margin-bottom:1rem;}
-    .detail-price-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
-    .detail-price{font-size:1.4rem;font-weight:600;color:#a07830;}
-    .detail-badge{background:#1a1209;color:#f5e6c8;font-size:11px;padding:4px 12px;border-radius:999px;}
-    .detail-section{margin-bottom:1.25rem;}
-    .detail-section-title{font-size:12px;font-weight:500;color:#a8906e;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem;}
-    .detail-desc{font-size:14px;color:#3a2e24;line-height:1.7;}
-    .detail-tags{display:flex;flex-wrap:wrap;gap:6px;}
-    .detail-tag{background:#f5f0e8;border:.5px solid #e0d4c0;border-radius:999px;padding:4px 12px;font-size:12px;color:#6a5a45;}
-    .nutrition-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-    .nut-card{background:#fff;border:.5px solid #e8ddd0;border-radius:10px;padding:.6rem;text-align:center;}
-    .nut-val{font-size:16px;font-weight:600;color:#1a1209;}
-    .nut-label{font-size:10px;color:#a8906e;margin-top:2px;}
-    .ingredient-list{display:flex;flex-direction:column;gap:6px;}
-    .ingredient-row{display:flex;align-items:center;gap:10px;font-size:13px;color:#3a2e24;}
-    .ingredient-dot{width:8px;height:8px;border-radius:50%;background:#d4a853;flex-shrink:0;}
-    .allergen-row{display:flex;flex-wrap:wrap;gap:6px;}
-    .allergen-tag{background:#fff3e0;border:.5px solid #f0c060;border-radius:6px;padding:3px 10px;font-size:11px;color:#8a5a00;}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bear Café — Menü</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&family=Noto+Sans+Arabic:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#f5f0e8;font-family:'DM Sans',sans-serif;min-height:100vh;}
+body.ar{font-family:'Noto Sans Arabic',sans-serif;}
+#lang-overlay{position:fixed;inset:0;background:#1a1209;display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:1.5rem;padding:2rem;}
+#lang-overlay h2{font-family:'Playfair Display',serif;color:#f5e6c8;font-size:2rem;text-align:center;}
+#lang-overlay p{color:#a8906e;font-size:12px;text-align:center;line-height:1.8;}
+.lang-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem;}
+.lang-btn{padding:.85rem 2rem;border-radius:999px;border:1.5px solid #d4a853;background:transparent;color:#f5e6c8;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit;}
+.lang-btn:hover{background:#d4a853;color:#1a1209;}
+.menu-wrap{max-width:440px;margin:0 auto;background:#fdfaf5;min-height:100vh;}
+.menu-hero{background:#1a1209;color:#f5e6c8;padding:2.5rem 1.5rem 2rem;text-align:center;border-radius:0 0 2rem 2rem;}
+.menu-hero .bear-icon{font-size:3rem;margin-bottom:.5rem;}
+.menu-hero h1{font-family:'Playfair Display',serif;font-size:2.2rem;letter-spacing:.03em;margin-bottom:.25rem;}
+.menu-hero p{font-size:11px;color:#a8906e;letter-spacing:.12em;text-transform:uppercase;}
+.cat-tabs{display:flex;gap:8px;padding:1.25rem 1.25rem .5rem;overflow-x:auto;scrollbar-width:none;}
+.cat-tabs::-webkit-scrollbar{display:none;}
+.cat-tab{padding:7px 16px;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;border:1.5px solid #d4a853;color:#a07830;background:transparent;font-family:inherit;transition:all .2s;}
+.cat-tab.active{background:#1a1209;color:#f5e6c8;border-color:#1a1209;}
+.category{display:none;padding-bottom:1rem;}
+.category.active{display:block;}
+.section-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:#1a1209;padding:1rem 1.5rem .5rem;font-weight:600;}
+.section-card{background:#fff;border-radius:1rem;margin:0 1rem;border:.5px solid #e8ddd0;overflow:hidden;}
+.item{display:flex;align-items:center;padding:.75rem 1.25rem;gap:12px;border-bottom:.5px solid #f0e8dc;cursor:pointer;transition:background .15s;}
+.item:hover{background:#fdf7f0;}
+.item:last-child{border-bottom:none;}
+.item-img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#f0e8dc;}
+.item-info{flex:1;min-width:0;}
+.item-name{font-size:14px;font-weight:500;color:#1a1209;margin-bottom:2px;}
+.item-desc{font-size:12px;color:#8a7560;line-height:1.4;}
+.item-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.item-price{font-size:14px;font-weight:600;color:#a07830;white-space:nowrap;}
+.item-arrow{font-size:12px;color:#c8b49a;}
+.wifi-box{margin:1rem;background:#fff;border-radius:1rem;border:.5px solid #e8ddd0;padding:1rem 1.25rem;text-align:center;}
+.wifi-box .wifi-icon{font-size:1.5rem;margin-bottom:6px;}
+.wifi-box .wifi-label{font-size:11px;color:#a8906e;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.wifi-box .wifi-name{font-size:14px;font-weight:500;color:#1a1209;margin-bottom:2px;}
+.wifi-box .wifi-pass{font-size:13px;color:#a07830;font-weight:600;letter-spacing:.08em;}
+.footer{text-align:center;padding:1rem;font-size:11px;color:#b0a090;}
+#detail-page{display:none;max-width:440px;margin:0 auto;background:#fdfaf5;min-height:100vh;}
+.detail-back{display:flex;align-items:center;gap:8px;padding:1rem 1.25rem;cursor:pointer;color:#a07830;font-size:14px;font-weight:500;background:#fff;border-bottom:.5px solid #e8ddd0;}
+.detail-back:hover{background:#fdf7f0;}
+.detail-photos{display:flex;gap:8px;padding:1rem;overflow-x:auto;scrollbar-width:none;}
+.detail-photos::-webkit-scrollbar{display:none;}
+.detail-photo{width:200px;height:200px;border-radius:14px;object-fit:cover;flex-shrink:0;}
+.detail-photo:first-child{width:100%;height:240px;flex-shrink:0;}
+.detail-body{padding:0 1rem 2rem;}
+.detail-name{font-family:'Playfair Display',serif;font-size:1.6rem;color:#1a1209;margin-bottom:.25rem;margin-top:1rem;}
+.detail-tagline{font-size:13px;color:#8a7560;margin-bottom:1rem;}
+.detail-price-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.detail-price{font-size:1.4rem;font-weight:600;color:#a07830;}
+.detail-badge{background:#1a1209;color:#f5e6c8;font-size:11px;padding:4px 12px;border-radius:999px;}
+.detail-section{margin-bottom:1.25rem;}
+.detail-section-title{font-size:12px;font-weight:500;color:#a8906e;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem;}
+.detail-desc{font-size:14px;color:#3a2e24;line-height:1.7;}
+.detail-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.detail-tag{background:#f5f0e8;border:.5px solid #e0d4c0;border-radius:999px;padding:4px 12px;font-size:12px;color:#6a5a45;}
+.nutrition-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.nut-card{background:#fff;border:.5px solid #e8ddd0;border-radius:10px;padding:.6rem;text-align:center;}
+.nut-val{font-size:16px;font-weight:600;color:#1a1209;}
+.nut-label{font-size:10px;color:#a8906e;margin-top:2px;}
+.allergen-row{display:flex;flex-wrap:wrap;gap:6px;}
+.allergen-tag{background:#fff3e0;border:.5px solid #f0c060;border-radius:6px;padding:3px 10px;font-size:11px;color:#8a5a00;}
+.waiter-btn{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 1rem 1rem;padding:1rem;background:#1a1209;color:#f5e6c8;border:none;border-radius:1rem;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;width:calc(100% - 2rem);}
+.waiter-btn:active{transform:scale(.97);}
+#waiter-toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1209;color:#f5e6c8;padding:.75rem 1.5rem;border-radius:999px;font-size:13px;font-weight:500;z-index:9999;transition:transform .35s ease,opacity .35s ease;opacity:0;white-space:nowrap;}
+#waiter-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.games-section{margin:0 1rem 1.5rem;}
+.games-section-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:#1a1209;padding:.75rem 0;font-weight:600;}
+.games-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.game-card{background:#fff;border:.5px solid #e8ddd0;border-radius:12px;padding:.75rem .5rem;text-align:center;cursor:pointer;transition:all .2s;}
+.game-card:hover,.game-card:active{background:#1a1209;border-color:#1a1209;}
+.game-card:hover .gc-name,.game-card:active .gc-name{color:#f5e6c8;}
+.game-card:hover .gc-icon,.game-card:active .gc-icon{transform:scale(1.15);}
+.gc-icon{font-size:1.8rem;display:block;margin-bottom:4px;transition:transform .2s;}
+.gc-name{font-size:12px;font-weight:500;color:#1a1209;}
+#game-page{display:none;max-width:440px;margin:0 auto;background:#fdfaf5;min-height:100vh;}
+.game-top-bar{display:flex;align-items:center;gap:8px;padding:1rem 1.25rem;cursor:pointer;color:#a07830;font-size:14px;font-weight:500;background:#fff;border-bottom:.5px solid #e8ddd0;}
+.game-top-bar:hover{background:#fdf7f0;}
+#game-container{padding:1rem;}
+.g-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:#1a1209;margin-bottom:.25rem;font-weight:600;}
+.g-hint{font-size:11px;color:#a8906e;margin-bottom:.75rem;}
+.g-score-row{display:flex;gap:8px;margin-bottom:.75rem;}
+.g-score-box{background:#1a1209;color:#f5e6c8;border-radius:8px;padding:4px 14px;text-align:center;}
+.g-score-label{font-size:9px;color:#a8906e;text-transform:uppercase;}
+.g-score-val{font-size:15px;font-weight:600;}
+.g-btns{display:flex;gap:8px;margin-top:10px;}
+.g-btn{flex:1;padding:.6rem;border:1.5px solid #d4a853;background:transparent;color:#a07830;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;}
+.g-btn:hover{background:#1a1209;color:#f5e6c8;border-color:#1a1209;}
+.g-msg{text-align:center;padding:.6rem;font-size:13px;font-weight:500;color:#a04020;min-height:24px;}
+#board2048{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#c8b49a;padding:6px;border-radius:10px;touch-action:none;}
+.c2048{height:68px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:18px;background:#e0d0bc;color:#1a1209;}
+.c2048.v2{background:#f5f0e8;}.c2048.v4{background:#f0e6d0;}.c2048.v8{background:#d4a853;color:#fff;}
+.c2048.v16{background:#c8843a;color:#fff;}.c2048.v32{background:#b86030;color:#fff;}.c2048.v64{background:#a04020;color:#fff;}
+.c2048.v128{background:#8B6914;color:#fff;font-size:15px;}.c2048.v256{background:#7a5c10;color:#fff;font-size:15px;}
+.c2048.v512{background:#6a4c0c;color:#fff;font-size:14px;}.c2048.v1024{background:#3a2e24;color:#f5e6c8;font-size:13px;}
+.c2048.v2048{background:#1a1209;color:#d4a853;font-size:13px;}
+#board-mem{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.mem-card{height:70px;border-radius:10px;background:#1a1209;display:flex;align-items:center;justify-content:center;font-size:1.8rem;cursor:pointer;transition:all .25s;border:2px solid #3a2e24;user-select:none;}
+.mem-card.flipped,.mem-card.matched{background:#f5e6c8;border-color:#d4a853;}
+.mem-card.matched{background:#d4a853;cursor:default;}
+.mem-back{font-size:1.5rem;}
+.mem-front{display:none;}
+.mem-card.flipped .mem-front,.mem-card.matched .mem-front{display:block;}
+.mem-card.flipped .mem-back,.mem-card.matched .mem-back{display:none;}
+#board-snake{display:grid;background:#1a1209;border-radius:10px;overflow:hidden;touch-action:none;}
+.sncell{background:#1a1209;}
+.sncell.sn{background:#d4a853;border-radius:3px;}
+.sncell.food{background:#a04020;border-radius:50%;}
+.dpad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:160px;margin:.75rem auto 0;}
+.dpad-btn{height:44px;background:#fff;border:.5px solid #e8ddd0;border-radius:8px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.dpad-btn:active{background:#d4a853;}
+#board-tetris{display:grid;background:#1a1209;border-radius:10px;overflow:hidden;}
+.tcell{background:#1a1209;}.tcell.filled{border-radius:2px;}
+#word-input-row{display:flex;gap:8px;margin-bottom:.75rem;}
+#word-input{flex:1;padding:.6rem .8rem;border:1.5px solid #e8ddd0;border-radius:8px;font-size:15px;font-family:inherit;background:#fff;color:#1a1209;text-transform:uppercase;}
+#word-input:focus{outline:none;border-color:#d4a853;}
+.word-display{display:flex;gap:6px;justify-content:center;margin-bottom:.75rem;}
+.letter-box{width:38px;height:42px;border:2px solid #e8ddd0;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#1a1209;background:#fff;}
+.word-guesses{display:flex;flex-direction:column;gap:6px;margin-bottom:.5rem;}
+.guess-row{display:flex;gap:5px;justify-content:center;}
+.guess-box{width:34px;height:38px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff;}
+.guess-box.c{background:#d4a853;}.guess-box.p{background:#c8843a;}.guess-box.w{background:#8a7560;}
+.rps-choices{display:flex;justify-content:center;gap:1rem;margin:1rem 0;}
+.rps-btn{width:72px;height:72px;border-radius:50%;border:2px solid #e8ddd0;background:#fff;font-size:2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.rps-btn:hover,.rps-btn:active{border-color:#d4a853;transform:scale(1.1);}
+.rps-battle{display:flex;justify-content:center;align-items:center;gap:1.5rem;font-size:3rem;margin:1rem 0;min-height:80px;}
+.rps-vs{font-size:14px;font-weight:600;color:#a8906e;}
+.rps-result{text-align:center;font-size:16px;font-weight:600;min-height:28px;}
+.win{color:#3a8a3a;}.lose{color:#a04020;}.draw{color:#a07830;}
+</style>
 </head>
 <body>
-
 <div id="lang-overlay">
   <div style="font-size:3.5rem">🐻</div>
   <h2>Bear Café</h2>
-  <p>Lütfen dil seçiniz<br>Please select a language<br>الرجاء اختيار اللغة</p>
+  <p>Lütfen dil seçiniz<br>Please select a language<br>&#x627;&#x644;&#x631;&#x62C;&#x627;&#x621; &#x627;&#x62E;&#x62A;&#x64A;&#x627;&#x631; &#x627;&#x644;&#x644;&#x63A;&#x629;</p>
   <div class="lang-btns">
-    <button class="lang-btn" onclick="setLang('tr')">🇹🇷 Türkçe</button>
-    <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
-    <button class="lang-btn" onclick="setLang('ar')">🇸🇦 العربية</button>
+    <button class="lang-btn" onclick="setLang('tr')">&#x1F1F9;&#x1F1F7; Türkçe</button>
+    <button class="lang-btn" onclick="setLang('en')">&#x1F1EC;&#x1F1E7; English</button>
+    <button class="lang-btn" onclick="setLang('ar')">&#x1F1F8;&#x1F1E6; &#x627;&#x644;&#x639;&#x631;&#x628;&#x64A;&#x629;</button>
   </div>
 </div>
-
-<!-- MAIN MENU -->
 <div class="menu-wrap" id="menu-wrap" style="display:none">
   <div class="menu-hero">
     <div class="bear-icon">🐻</div>
@@ -104,507 +157,227 @@
   <div class="cat-tabs" id="cat-tabs"></div>
   <div id="menu-body"></div>
   <div class="wifi-box">
-    <div class="wifi-icon">📶</div>
+    <div class="wifi-icon">&#x1F4F6;</div>
     <div class="wifi-label" id="wifi-label">Ücretsiz Wi-Fi</div>
     <div class="wifi-name">BearCafe_Guest</div>
     <div class="wifi-pass">bear2024</div>
   </div>
+  <button class="waiter-btn" onclick="callWaiter()">
+    <span>🔔</span><span id="waiter-btn-text">Garson Çağır</span>
+  </button>
+  <div class="games-section">
+    <div class="games-section-title" id="games-section-title">🎮 Oyunlar</div>
+    <div class="games-grid">
+      <div class="game-card" onclick="openGame('2048')"><span class="gc-icon">🔢</span><span class="gc-name">2048</span></div>
+      <div class="game-card" onclick="openGame('memory')"><span class="gc-icon">🃏</span><span class="gc-name" id="gc-memory">Hafıza</span></div>
+      <div class="game-card" onclick="openGame('snake')"><span class="gc-icon">🐍</span><span class="gc-name" id="gc-snake">Yılan</span></div>
+      <div class="game-card" onclick="openGame('tetris')"><span class="gc-icon">🧱</span><span class="gc-name">Tetris</span></div>
+      <div class="game-card" onclick="openGame('word')"><span class="gc-icon">📝</span><span class="gc-name" id="gc-word">Kelime</span></div>
+      <div class="game-card" onclick="openGame('rps')"><span class="gc-icon">✊</span><span class="gc-name" id="gc-rps">Taş Kağıt</span></div>
+    </div>
+  </div>
   <div class="footer">Bear Café © 2024</div>
 </div>
-
-<!-- DETAIL PAGE -->
+<div id="waiter-toast">🔔 <span id="toast-text">Garsonunuz geliyor!</span></div>
+<div id="game-page">
+  <div class="game-top-bar" onclick="closeGame()">← <span id="game-back-text">Menüye dön</span></div>
+  <div id="game-container"></div>
+</div>
 <div id="detail-page">
   <div class="detail-back" id="detail-back">← <span id="back-text">Geri dön</span></div>
   <div id="detail-content"></div>
 </div>
-
 <script>
-const T = {
-  tr:{ heroSub:'Taze · Sıcak · Lezzetli', wifi:'Ücretsiz Wi-Fi', back:'Menüye dön',
-       cats:['☕ Kahve','🍵 Çay','🥪 Yiyecek','🍰 Tatlı'],
-       labels:{ ingredients:'İçindekiler', brand:'Çekirdek / Marka', description:'Açıklama',
-                nutrition:'Besin Değerleri', allergens:'Alerjenler', origin:'Köken',
-                calories:'Kalori', protein:'Protein', carbs:'Karbonhidrat', fat:'Yağ', sugar:'Şeker', fiber:'Lif' }},
-  en:{ heroSub:'Fresh · Warm · Delicious', wifi:'Free Wi-Fi', back:'Back to menu',
-       cats:['☕ Coffee','🍵 Tea','🥪 Food','🍰 Desserts'],
-       labels:{ ingredients:'Ingredients', brand:'Bean / Brand', description:'Description',
-                nutrition:'Nutrition Facts', allergens:'Allergens', origin:'Origin',
-                calories:'Calories', protein:'Protein', carbs:'Carbs', fat:'Fat', sugar:'Sugar', fiber:'Fiber' }},
-  ar:{ heroSub:'طازج · دافئ · لذيذ', wifi:'واي فاي مجاني', back:'العودة إلى القائمة',
-       cats:['☕ قهوة','🍵 شاي','🥪 طعام','🍰 حلويات'],
-       labels:{ ingredients:'المكونات', brand:'الحبوب / الماركة', description:'الوصف',
-                nutrition:'القيم الغذائية', allergens:'مسببات الحساسية', origin:'المصدر',
-                calories:'سعرات', protein:'بروتين', carbs:'كربوهيدرات', fat:'دهون', sugar:'سكر', fiber:'ألياف' }}
+const T={
+  tr:{heroSub:'Taze · Sıcak · Lezzetli',wifi:'Ücretsiz Wi-Fi',back:'Menüye dön',
+      cats:['☕ Kahve','🍵 Çay','🥪 Yiyecek','🍰 Tatlı'],
+      gamesTitle:'🎮 Oyunlar',gameBack:'Menüye dön',waiterBtn:'Garson Çağır',waiterToast:'Garsonunuz geliyor! 🐻',
+      gcMemory:'Hafıza',gcSnake:'Yılan',gcWord:'Kelime',gcRps:'Taş Kağıt',
+      labels:{ingredients:'İçindekiler',brand:'Çekirdek / Marka',description:'Açıklama',nutrition:'Besin Değerleri',allergens:'Alerjenler',origin:'Köken',calories:'Kalori',protein:'Protein',carbs:'Karbonhidrat',fat:'Yağ',sugar:'Şeker',fiber:'Lif'}},
+  en:{heroSub:'Fresh · Warm · Delicious',wifi:'Free Wi-Fi',back:'Back to menu',
+      cats:['☕ Coffee','🍵 Tea','🥪 Food','🍰 Desserts'],
+      gamesTitle:'🎮 Games',gameBack:'Back to menu',waiterBtn:'Call Waiter',waiterToast:'Your waiter is coming! 🐻',
+      gcMemory:'Memory',gcSnake:'Snake',gcWord:'Word',gcRps:'Rock Paper',
+      labels:{ingredients:'Ingredients',brand:'Bean / Brand',description:'Description',nutrition:'Nutrition Facts',allergens:'Allergens',origin:'Origin',calories:'Calories',protein:'Protein',carbs:'Carbs',fat:'Fat',sugar:'Sugar',fiber:'Fiber'}},
+  ar:{heroSub:'طازج · دافئ · لذيذ',wifi:'واي فاي مجاني',back:'العودة إلى القائمة',
+      cats:['☕ قهوة','🍵 شاي','🥪 طعام','🍰 حلويات'],
+      gamesTitle:'🎮 ألعاب',gameBack:'العودة إلى القائمة',waiterBtn:'استدعاء النادل',waiterToast:'النادل في الطريق! 🐻',
+      gcMemory:'ذاكرة',gcSnake:'ثعبان',gcWord:'كلمة',gcRps:'حجر ورق',
+      labels:{ingredients:'المكونات',brand:'الحبوب / الماركة',description:'الوصف',nutrition:'القيم الغذائية',allergens:'مسببات الحساسية',origin:'المصدر',calories:'سعرات',protein:'بروتين',carbs:'كربوهيدرات',fat:'دهون',sugar:'سكر',fiber:'ألياف'}}
 };
-
-const MENU = [
-  { key:'kahve', sections:[
-    { title:{tr:'Sıcak Kahveler',en:'Hot Coffees',ar:'قهوة ساخنة'}, items:[
-      { name:{tr:'Espresso',en:'Espresso',ar:'إسبريسو'}, desc:{tr:'Yoğun, saf Arabica',en:'Intense pure Arabica',ar:'أرابيكا نقية مركزة'}, price:'45 ₺',
-        imgs:['https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=600&q=80','https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600&q=80','https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80'],
-        detail:{
-          description:{tr:'Tek shot espresso, 7 bar basınçla demlenir. Yoğun aroması ve kadifemsi crema\'sıyla Bear Café\'nin en çok tercih edilen içeceği.',en:'Single shot espresso brewed at 7 bar pressure. With its intense aroma and velvety crema, the most preferred drink at Bear Café.',ar:'إسبريسو أحادي الشوط مخمر بضغط 7 بار. بأروما مكثفة وكريما مخملية، المشروب الأكثر طلباً في Bear Café.'},
-          brand:{tr:'Lavazza Qualità Rossa — İtalya kökenli, %100 Arabica',en:'Lavazza Qualità Rossa — Italian origin, 100% Arabica',ar:'لافاتسا كواليتا روسا — مصدر إيطالي، 100% أرابيكا'},
-          origin:{tr:'Etiyopya & Kolombiya harmanlı',en:'Ethiopia & Colombia blend',ar:'مزيج إثيوبيا وكولومبيا'},
-          tags:{tr:['Glutensiz','Vegan','Laktoz İçermez'],en:['Gluten-free','Vegan','Lactose-free'],ar:['خالٍ من الجلوتين','نباتي','خالٍ من اللاكتوز']},
-          nutrition:{calories:5,protein:0.1,carbs:0.5,fat:0.1,sugar:0,fiber:0},
-          allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}
-        }
-      },
-      { name:{tr:'Latte',en:'Latte',ar:'لاتيه'}, desc:{tr:'Espresso + buharlı süt',en:'Espresso + steamed milk',ar:'إسبريسو + حليب مبخر'}, price:'75 ₺',
-        imgs:['https://images.unsplash.com/photo-1561047029-3000c68339ca?w=600&q=80','https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80','https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=600&q=80'],
-        detail:{
-          description:{tr:'Çift shot espresso üzerine ince buhar köpüğüyle süslenen, kremsi ve dengeli bir içecek. İsteğe bağlı latte art yapılmaktadır.',en:'A creamy and balanced drink with double shot espresso topped with fine steam foam. Latte art available upon request.',ar:'مشروب كريمي ومتوازن بإسبريسو مزدوج مع رغوة بخار ناعمة. فن اللاتيه متاح عند الطلب.'},
-          brand:{tr:'Lavazza Super Crema — %60 Arabica, %40 Robusta',en:'Lavazza Super Crema — 60% Arabica, 40% Robusta',ar:'لافاتسا سوبر كريما — 60% أرابيكا، 40% روبوستا'},
-          origin:{tr:'Brezilya & Vietnam harmanlı',en:'Brazil & Vietnam blend',ar:'مزيج البرازيل وفيتنام'},
-          tags:{tr:['Sütlü','Sanatsal Sunum'],en:['With Milk','Artistic Presentation'],ar:['بالحليب','تقديم فني']},
-          nutrition:{calories:120,protein:6,carbs:10,fat:5,sugar:9,fiber:0},
-          allergens:{tr:['Süt'],en:['Milk'],ar:['حليب']}
-        }
-      },
-      { name:{tr:'Cappuccino',en:'Cappuccino',ar:'كابوتشينو'}, desc:{tr:'Krema köpüklü',en:'Rich foamy cream',ar:'رغوة كريمية غنية'}, price:'70 ₺',
-        imgs:['https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&q=80','https://images.unsplash.com/photo-1485808191679-5f86510bd652?w=600&q=80'],
-        detail:{
-          description:{tr:'Eşit oranda espresso, buharlı süt ve köpükten oluşan klasik İtalyan kahvesi. Üzerine hafif kakao tozu serpilir.',en:'Classic Italian coffee with equal parts espresso, steamed milk, and foam. Lightly dusted with cocoa powder.',ar:'قهوة إيطالية كلاسيكية من أجزاء متساوية من الإسبريسو والحليب المبخر والرغوة. يرش عليها مسحوق الكاكاو.'},
-          brand:{tr:'Lavazza Qualità Oro — %100 Arabica',en:'Lavazza Qualità Oro — 100% Arabica',ar:'لافاتسا كواليتا أورو — 100% أرابيكا'},
-          origin:{tr:'Orta Amerika & Doğu Afrika',en:'Central America & East Africa',ar:'أمريكا الوسطى وشرق أفريقيا'},
-          tags:{tr:['Sütlü','Köpüklü','Klasik'],en:['Milk','Foamy','Classic'],ar:['بالحليب','رغوي','كلاسيكي']},
-          nutrition:{calories:90,protein:5,carbs:8,fat:4,sugar:7,fiber:0},
-          allergens:{tr:['Süt'],en:['Milk'],ar:['حليب']}
-        }
-      },
-      { name:{tr:'Mocha',en:'Mocha',ar:'موكا'}, desc:{tr:'Çikolata + espresso + süt',en:'Chocolate + espresso + milk',ar:'شوكولاتة + إسبريسو + حليب'}, price:'80 ₺',
-        imgs:['https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600&q=80','https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80'],
-        detail:{
-          description:{tr:'Belçika sütlü çikolata sosuyla hazırlanan mocha, espresso ve buharlı sütün mükemmel birlikteliği. Üzeri çırpılmış krema ile servis edilir.',en:'Mocha made with Belgian milk chocolate sauce, the perfect combination of espresso and steamed milk. Served with whipped cream on top.',ar:'موكا مع صوص الشوكولاتة الحليب البلجيكية، الجمع المثالي من الإسبريسو والحليب المبخر. يُقدم مع كريمة مخفوقة.'},
-          brand:{tr:'Lavazza + Callebaut Çikolata',en:'Lavazza + Callebaut Chocolate',ar:'لافاتسا + شوكولاتة كاليبو'},
-          origin:{tr:'Belçika çikolatası, İtalya kahvesi',en:'Belgian chocolate, Italian coffee',ar:'شوكولاتة بلجيكية، قهوة إيطالية'},
-          tags:{tr:['Çikolatalı','Sütlü','Tatlımsı'],en:['Chocolate','Milk','Sweet'],ar:['شوكولاتة','حليب','حلو']},
-          nutrition:{calories:220,protein:7,carbs:28,fat:9,sugar:25,fiber:1},
-          allergens:{tr:['Süt','Soya'],en:['Milk','Soy'],ar:['حليب','صويا']}
-        }
-      },
-      { name:{tr:'Türk Kahvesi',en:'Turkish Coffee',ar:'قهوة تركية'}, desc:{tr:'Geleneksel tarif, lokumlu',en:'Traditional, with Turkish delight',ar:'وصفة تقليدية مع راحة الحلقوم'}, price:'55 ₺',
-        imgs:['https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80','https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80'],
-        detail:{
-          description:{tr:'Özel olarak öğütülmüş Arabica kahvesi, geleneksel cezve yöntemiyle pişirilir. Gül suyu lokumu ile servis edilir. Az, orta veya sade tercihine göre hazırlanır.',en:'Specially ground Arabica coffee brewed in traditional cezve. Served with rose water Turkish delight. Prepared according to your preference: unsweetened, medium or sweet.',ar:'قهوة أرابيكا مطحونة خصيصاً، مخمرة بطريقة الجزوة التقليدية. تُقدم مع راحة الحلقوم بماء الورد. تُحضر حسب تفضيلك: بدون سكر أو متوسطة أو حلوة.'},
-          brand:{tr:'Kurukahveci Mehmet Efendi — İstanbul',en:'Kurukahveci Mehmet Efendi — Istanbul',ar:'كوروكاهفيجي محمد أفندي — إسطنبول'},
-          origin:{tr:'Etiyopya Sidama bölgesi',en:'Ethiopia Sidama region',ar:'منطقة سيداما، إثيوبيا'},
-          tags:{tr:['Geleneksel','Lokumlu','Az/Orta/Sade'],en:['Traditional','With Delight','Sweetness choice'],ar:['تقليدي','مع الحلقوم','خيار السكر']},
-          nutrition:{calories:25,protein:0.3,carbs:3,fat:0.3,sugar:2.5,fiber:0},
-          allergens:{tr:['Yok (lokum ayrı)'],en:['None (delight separate)'],ar:['لا يوجد (الحلقوم منفصل)']}
-        }
-      },
-      { name:{tr:'Flat White',en:'Flat White',ar:'فلات وايت'}, desc:{tr:'Çift espresso + ince köpük',en:'Double espresso + micro foam',ar:'إسبريسو مزدوج + رغوة ناعمة'}, price:'80 ₺',
-        imgs:['https://images.unsplash.com/photo-1621193793262-4127d9855c91?w=600&q=80','https://images.unsplash.com/photo-1561047029-3000c68339ca?w=600&q=80'],
-        detail:{
-          description:{tr:'Avustralya kökenli bu kahve, çift shot espresso üzerine microfoam sütün eklenmesiyle hazırlanır. Latte\'ye göre daha yoğun kahve tadı verir.',en:'This Australian-origin coffee is made by adding microfoam milk over double shot espresso. Gives a more intense coffee flavor than a latte.',ar:'هذه القهوة ذات الأصل الأسترالي تُصنع بإضافة حليب الميكروفوم على إسبريسو مزدوج. تعطي نكهة قهوة أكثر كثافة من اللاتيه.'},
-          brand:{tr:'Lavazza Super Crema',en:'Lavazza Super Crema',ar:'لافاتسا سوبر كريما'},
-          origin:{tr:'Avustralya usulü, Brezilya çekirdeği',en:'Australian style, Brazilian beans',ar:'الأسلوب الأسترالي، حبوب برازيلية'},
-          tags:{tr:['Yoğun','Az Köpük','Avustralya Usulü'],en:['Strong','Less Foam','Australian Style'],ar:['قوي','رغوة قليلة','الأسلوب الأسترالي']},
-          nutrition:{calories:100,protein:5,carbs:8,fat:4,sugar:7,fiber:0},
-          allergens:{tr:['Süt'],en:['Milk'],ar:['حليب']}
-        }
-      },
-      { name:{tr:'Sütlü Kahve',en:'White Coffee',ar:'قهوة بالحليب'}, desc:{tr:'Hafif, sütlü Arabica',en:'Mild, milky Arabica',ar:'أرابيكا خفيفة بالحليب'}, price:'65 ₺',
-        imgs:['https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80'],
-        detail:{
-          description:{tr:'Hafif kavrulmuş Arabica çekirdeklerinden hazırlanan, bol sütlü ve nazik bir içecek. Kahveye yeni başlayanlar için ideal.',en:'A gentle, milky drink made from lightly roasted Arabica beans. Ideal for those new to coffee.',ar:'مشروب لطيف وكثير الحليب مصنوع من حبوب أرابيكا خفيفة التحميص. مثالي للمبتدئين في القهوة.'},
-          brand:{tr:'Lavazza Qualità Rossa',en:'Lavazza Qualità Rossa',ar:'لافاتسا كواليتا روسا'},
-          origin:{tr:'Brezilya',en:'Brazil',ar:'البرازيل'},
-          tags:{tr:['Hafif','Sütlü','Başlangıç Dostu'],en:['Mild','Milky','Beginner Friendly'],ar:['خفيف','بالحليب','مناسب للمبتدئين']},
-          nutrition:{calories:110,protein:5,carbs:9,fat:4,sugar:8,fiber:0},
-          allergens:{tr:['Süt'],en:['Milk'],ar:['حليب']}
-        }
-      },
-      { name:{tr:'Americano',en:'Americano',ar:'أمريكانو'}, desc:{tr:'Espresso + sıcak su',en:'Espresso + hot water',ar:'إسبريسو + ماء ساخن'}, price:'55 ₺',
-        imgs:['https://images.unsplash.com/photo-1551030173-122aabc4489c?w=600&q=80'],
-        detail:{
-          description:{tr:'Çift shot espresso üzerine sıcak su eklenerek hazırlanır. Uzun ve dengeli bir içecek arayanlar için ideal.',en:'Prepared by adding hot water over double shot espresso. Ideal for those looking for a long and balanced drink.',ar:'يُحضر بإضافة ماء ساخن على إسبريسو مزدوج. مثالي لمن يبحث عن مشروب طويل ومتوازن.'},
-          brand:{tr:'Lavazza Qualità Rossa',en:'Lavazza Qualità Rossa',ar:'لافاتسا كواليتا روسا'},
-          origin:{tr:'Etiyopya & Brezilya harmanlı',en:'Ethiopia & Brazil blend',ar:'مزيج إثيوبيا والبرازيل'},
-          tags:{tr:['Glutensiz','Vegan','Uzun İçecek'],en:['Gluten-free','Vegan','Long Drink'],ar:['خالٍ من الجلوتين','نباتي','مشروب طويل']},
-          nutrition:{calories:10,protein:0.2,carbs:1,fat:0.1,sugar:0,fiber:0},
-          allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}
-        }
-      },
+const MENU=[
+  {key:'kahve',sections:[
+    {title:{tr:'Sıcak Kahveler',en:'Hot Coffees',ar:'قهوة ساخنة'},items:[
+      {name:{tr:'Espresso',en:'Espresso',ar:'إسبريسو'},desc:{tr:'Yoğun, saf Arabica',en:'Intense pure Arabica',ar:'أرابيكا نقية'},price:'45 ₺',imgs:['https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=600&q=80','https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80'],detail:{description:{tr:'7 bar basınçla demlenen tek shot espresso.',en:'Single shot espresso brewed at 7 bar.',ar:'إسبريسو بضغط 7 بار.'},brand:{tr:'Lavazza Qualità Rossa',en:'Lavazza Qualità Rossa',ar:'لافاتسا كواليتا روسا'},origin:{tr:'Etiyopya & Kolombiya',en:'Ethiopia & Colombia',ar:'إثيوبيا وكولومبيا'},tags:{tr:['Glutensiz','Vegan'],en:['Gluten-free','Vegan'],ar:['خالٍ من الجلوتين','نباتي']},nutrition:{calories:5,protein:0.1,carbs:0.5,fat:0.1,sugar:0,fiber:0},allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}}},
+      {name:{tr:'Latte',en:'Latte',ar:'لاتيه'},desc:{tr:'Espresso + buharlı süt',en:'Espresso + steamed milk',ar:'إسبريسو + حليب'},price:'75 ₺',imgs:['https://images.unsplash.com/photo-1561047029-3000c68339ca?w=600&q=80'],detail:{description:{tr:'Çift shot espresso, buharlı süt, latte art.',en:'Double shot, steamed milk, latte art.',ar:'إسبريسو مزدوج وحليب مبخر.'},brand:{tr:'Lavazza Super Crema',en:'Lavazza Super Crema',ar:'لافاتسا سوبر كريما'},origin:{tr:'Brezilya & Vietnam',en:'Brazil & Vietnam',ar:'البرازيل وفيتنام'},tags:{tr:['Sütlü'],en:['Milk'],ar:['بالحليب']},nutrition:{calories:120,protein:6,carbs:10,fat:5,sugar:9,fiber:0},allergens:{tr:['Süt'],en:['Milk'],ar:['حليب']}}},
+      {name:{tr:'Cappuccino',en:'Cappuccino',ar:'كابوتشينو'},desc:{tr:'Krema köpüklü',en:'Rich foamy',ar:'رغوة كريمية'},price:'70 ₺',imgs:['https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&q=80'],detail:{description:{tr:'Eşit oranda espresso, süt, köpük.',en:'Equal espresso, milk, foam.',ar:'أجزاء متساوية من الإسبريسو والحليب والرغوة.'},brand:{tr:'Lavazza Qualità Oro',en:'Lavazza Qualità Oro',ar:'لافاتسا أورو'},origin:{tr:'Orta Amerika',en:'Central America',ar:'أمريكا الوسطى'},tags:{tr:['Klasik'],en:['Classic'],ar:['كلاسيكي']},nutrition:{calories:90,protein:5,carbs:8,fat:4,sugar:7,fiber:0},allergens:{tr:['Süt'],en:['Milk'],ar:['حليب']}}},
+      {name:{tr:'Türk Kahvesi',en:'Turkish Coffee',ar:'قهوة تركية'},desc:{tr:'Geleneksel, lokumlu',en:'Traditional, with delight',ar:'تقليدية مع حلقوم'},price:'55 ₺',imgs:['https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80'],detail:{description:{tr:'Cezve ile pişirilir, gül lokumlu servis.',en:'Brewed in cezve, served with rose delight.',ar:'مخمرة في الجزوة مع راحة الحلقوم.'},brand:{tr:'Kurukahveci Mehmet Efendi',en:'Kurukahveci Mehmet Efendi',ar:'كوروكاهفيجي محمد أفندي'},origin:{tr:'Etiyopya Sidama',en:'Ethiopia Sidama',ar:'إثيوبيا سيداما'},tags:{tr:['Geleneksel'],en:['Traditional'],ar:['تقليدي']},nutrition:{calories:25,protein:0.3,carbs:3,fat:0.3,sugar:2.5,fiber:0},allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}}},
+      {name:{tr:'Mocha',en:'Mocha',ar:'موكا'},desc:{tr:'Çikolata + espresso + süt',en:'Chocolate + espresso + milk',ar:'شوكولاتة + إسبريسو'},price:'80 ₺',imgs:['https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600&q=80'],detail:{description:{tr:'Belçika çikolatası ve espresso.',en:'Belgian chocolate and espresso.',ar:'شوكولاتة بلجيكية وإسبريسو.'},brand:{tr:'Lavazza + Callebaut',en:'Lavazza + Callebaut',ar:'لافاتسا + كاليبو'},origin:{tr:'Belçika & İtalya',en:'Belgium & Italy',ar:'بلجيكا وإيطاليا'},tags:{tr:['Çikolatalı'],en:['Chocolate'],ar:['شوكولاتة']},nutrition:{calories:220,protein:7,carbs:28,fat:9,sugar:25,fiber:1},allergens:{tr:['Süt','Soya'],en:['Milk','Soy'],ar:['حليب','صويا']}}},
     ]},
-    { title:{tr:'Soğuk Kahveler',en:'Iced Coffees',ar:'قهوة باردة'}, items:[
-      { name:{tr:'Iced Latte',en:'Iced Latte',ar:'لاتيه مثلج'}, desc:{tr:'Buzlu espresso + süt',en:'Iced espresso + milk',ar:'إسبريسو مثلج + حليب'}, price:'80 ₺',
-        imgs:['https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80','https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&q=80'],
-        detail:{
-          description:{tr:'Çift shot espresso buz üzerine dökülür, üzerine soğuk süt eklenir. Yaz aylarının vazgeçilmezi.',en:'Double shot espresso poured over ice, topped with cold milk. The summer essential.',ar:'إسبريسو مزدوج يُسكب على الثلج، ويُضاف فوقه الحليب البارد. ضرورة الصيف.'},
-          brand:{tr:'Lavazza Super Crema',en:'Lavazza Super Crema',ar:'لافاتسا سوبر كريما'},
-          origin:{tr:'İtalyan çekirdeği, soğuk servis',en:'Italian beans, cold serve',ar:'حبوب إيطالية، تقديم بارد'},
-          tags:{tr:['Soğuk','Buzlu','Serinletici'],en:['Cold','Iced','Refreshing'],ar:['بارد','مثلج','منعش']},
-          nutrition:{calories:115,protein:6,carbs:10,fat:4,sugar:9,fiber:0},
-          allergens:{tr:['Süt'],en:['Milk'],ar:['حليب']}
-        }
-      },
-      { name:{tr:'Cold Brew',en:'Cold Brew',ar:'كولد برو'}, desc:{tr:'18 saat soğuk demleme',en:'18-hour cold steep',ar:'تخمير بارد 18 ساعة'}, price:'90 ₺',
-        imgs:['https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&q=80'],
-        detail:{
-          description:{tr:'18 saat boyunca soğuk suda demlenen kahve, pürüzsüz ve düşük asitli bir tat verir. Kafein miktarı normalin 1.5 katıdır.',en:'Coffee steeped in cold water for 18 hours gives a smooth and low-acid taste. Contains 1.5x the normal caffeine amount.',ar:'القهوة المنقوعة في الماء البارد لمدة 18 ساعة تعطي طعمًا ناعمًا ومنخفض الحموضة. تحتوي على 1.5 ضعف كمية الكافيين العادية.'},
-          brand:{tr:'Ethiopia Yirgacheffe, özel öğütme',en:'Ethiopia Yirgacheffe, special grind',ar:'إثيوبيا يرغاشيف، طحن خاص'},
-          origin:{tr:'Etiyopya Yirgacheffe bölgesi',en:'Ethiopia Yirgacheffe region',ar:'منطقة يرغاشيف، إثيوبيا'},
-          tags:{tr:['Yüksek Kafein','Soğuk','Düşük Asit'],en:['High Caffeine','Cold','Low Acid'],ar:['كافيين عالٍ','بارد','حموضة منخفضة']},
-          nutrition:{calories:15,protein:0.3,carbs:2,fat:0,sugar:0,fiber:0},
-          allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}
-        }
-      },
-      { name:{tr:'Frappe',en:'Frappe',ar:'فرابي'}, desc:{tr:'Blenderda çırpılmış soğuk kahve',en:'Blended iced coffee',ar:'قهوة باردة مخفوقة'}, price:'85 ₺',
-        imgs:['https://images.unsplash.com/photo-1568649929103-28ffbefaca1e?w=600&q=80'],
-        detail:{
-          description:{tr:'Espresso, süt ve buz blenderda çırpılarak hazırlanır. İsteğe göre şeker ve vanilin eklenir.',en:'Espresso, milk and ice blended together. Sugar and vanilla can be added upon request.',ar:'يُخفق الإسبريسو والحليب والثلج معاً. يمكن إضافة السكر والفانيلا عند الطلب.'},
-          brand:{tr:'Lavazza Qualità Rossa',en:'Lavazza Qualità Rossa',ar:'لافاتسا كواليتا روسا'},
-          origin:{tr:'Yunan usulü, soğuk blend',en:'Greek style, cold blend',ar:'الأسلوب اليوناني، مزيج بارد'},
-          tags:{tr:['Soğuk','Köpüklü','Serinletici'],en:['Cold','Foamy','Refreshing'],ar:['بارد','رغوي','منعش']},
-          nutrition:{calories:180,protein:5,carbs:22,fat:7,sugar:20,fiber:0},
-          allergens:{tr:['Süt'],en:['Milk'],ar:['حليب']}
-        }
-      },
+    {title:{tr:'Soğuk Kahveler',en:'Iced Coffees',ar:'قهوة باردة'},items:[
+      {name:{tr:'Iced Latte',en:'Iced Latte',ar:'لاتيه مثلج'},desc:{tr:'Buzlu espresso + süt',en:'Iced espresso + milk',ar:'مثلج + حليب'},price:'80 ₺',imgs:['https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80'],detail:{description:{tr:'Çift shot buz üzerine, soğuk süt.',en:'Double shot over ice, cold milk.',ar:'إسبريسو مزدوج على الثلج.'},brand:{tr:'Lavazza Super Crema',en:'Lavazza Super Crema',ar:'لافاتسا سوبر كريما'},origin:{tr:'İtalyan çekirdeği',en:'Italian beans',ar:'حبوب إيطالية'},tags:{tr:['Soğuk'],en:['Cold'],ar:['بارد']},nutrition:{calories:115,protein:6,carbs:10,fat:4,sugar:9,fiber:0},allergens:{tr:['Süt'],en:['Milk'],ar:['حليب']}}},
+      {name:{tr:'Cold Brew',en:'Cold Brew',ar:'كولد برو'},desc:{tr:'18 saat soğuk demleme',en:'18-hour cold steep',ar:'تخمير بارد 18 ساعة'},price:'90 ₺',imgs:['https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&q=80'],detail:{description:{tr:'18 saat soğuk demleme, düşük asit.',en:'18 hours cold steep, low acidity.',ar:'18 ساعة تخمير بارد.'},brand:{tr:'Ethiopia Yirgacheffe',en:'Ethiopia Yirgacheffe',ar:'إثيوبيا يرغاشيف'},origin:{tr:'Etiyopya',en:'Ethiopia',ar:'إثيوبيا'},tags:{tr:['Yüksek Kafein'],en:['High Caffeine'],ar:['كافيين عالٍ']},nutrition:{calories:15,protein:0.3,carbs:2,fat:0,sugar:0,fiber:0},allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}}},
     ]}
   ]},
-  { key:'cay', sections:[
-    { title:{tr:'Sıcak Çaylar',en:'Hot Teas',ar:'شاي ساخن'}, items:[
-      { name:{tr:'Demlik Çay',en:'Turkish Tea',ar:'شاي تركي'}, desc:{tr:'Rize siyah çayı',en:'Rize black tea',ar:'شاي ريزي الأسود'}, price:'35 ₺',
-        imgs:['https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80'],
-        detail:{
-          description:{tr:'Rize\'nin serin yamaçlarından toplanan siyah çay yaprakları, geleneksel çaydanlıkta demlenir. Koyu ve açık bardak şeklinde servis edilir.',en:'Black tea leaves collected from the cool slopes of Rize, brewed in traditional teapot. Served in dark or light glass.',ar:'أوراق الشاي الأسود المجمعة من المنحدرات الباردة لريزي، مخمرة في إبريق تقليدي. تُقدم في كوب داكن أو فاتح.'},
-          brand:{tr:'Çaykur Rize Turist Çayı',en:'Çaykur Rize Tourist Tea',ar:'جايكور ريزي شاي السياح'},
-          origin:{tr:'Rize, Türkiye',en:'Rize, Turkey',ar:'ريزي، تركيا'},
-          tags:{tr:['Geleneksel','Kafeinli','Siyah Çay'],en:['Traditional','Caffeinated','Black Tea'],ar:['تقليدي','يحتوي كافيين','شاي أسود']},
-          nutrition:{calories:2,protein:0,carbs:0.5,fat:0,sugar:0,fiber:0},
-          allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}
-        }
-      },
-      { name:{tr:'Ihlamur',en:'Linden Tea',ar:'شاي الزيزفون'}, desc:{tr:'Taze demleme',en:'Freshly brewed',ar:'مخمر طازج'}, price:'45 ₺',
-        imgs:['https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&q=80'],
-        detail:{
-          description:{tr:'Doğal kurutulmuş ıhlamur çiçeklerinden hazırlanan bu çay, sakinleştirici ve bağışıklık güçlendirici özellikleriyle bilinir.',en:'This tea made from naturally dried linden flowers is known for its calming and immunity-boosting properties.',ar:'هذا الشاي المصنوع من أزهار الزيزفون المجففة طبيعياً معروف بخصائصه المهدئة ومعززة المناعة.'},
-          brand:{tr:'Doğadan — Türkiye',en:'Doğadan — Turkey',ar:'دوغادان — تركيا'},
-          origin:{tr:'Anadolu dağları',en:'Anatolian mountains',ar:'جبال الأناضول'},
-          tags:{tr:['Kafeinsiz','Doğal','Sakinleştirici'],en:['Caffeine-free','Natural','Calming'],ar:['خالٍ من الكافيين','طبيعي','مهدئ']},
-          nutrition:{calories:3,protein:0,carbs:0.7,fat:0,sugar:0,fiber:0},
-          allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}
-        }
-      },
-      { name:{tr:'Nane Limon',en:'Mint Lemon',ar:'نعناع بالليمون'}, desc:{tr:'Taze nane + limon',en:'Fresh mint + lemon',ar:'نعناع طازج + ليمون'}, price:'45 ₺',
-        imgs:['https://images.unsplash.com/photo-1563911892437-1feda0179e1b?w=600&q=80'],
-        detail:{
-          description:{tr:'Her gün taze toplanan nane yaprakları sıcak suya demlenip içine taze limon suyu sıkılır. Sindirimi kolaylaştırır.',en:'Fresh mint leaves picked daily are steeped in hot water with fresh lemon juice squeezed in. Aids digestion.',ar:'أوراق النعناع الطازجة المقطوفة يومياً تُنقع في ماء ساخن مع عصير ليمون طازج. يساعد على الهضم.'},
-          brand:{tr:'Taze nane — yerel tedarik',en:'Fresh mint — local supply',ar:'نعناع طازج — توريد محلي'},
-          origin:{tr:'Yerel çiftçilerden günlük temin',en:'Daily from local farmers',ar:'يومياً من المزارعين المحليين'},
-          tags:{tr:['Kafeinsiz','Sindirimi Kolaylaştırır','Taze'],en:['Caffeine-free','Digestive','Fresh'],ar:['خالٍ من الكافيين','يساعد الهضم','طازج']},
-          nutrition:{calories:5,protein:0.1,carbs:1,fat:0,sugar:0.5,fiber:0.1},
-          allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}
-        }
-      },
+  {key:'cay',sections:[
+    {title:{tr:'Çaylar',en:'Teas',ar:'شاي'},items:[
+      {name:{tr:'Demlik Çay',en:'Turkish Tea',ar:'شاي تركي'},desc:{tr:'Rize siyah çayı',en:'Rize black tea',ar:'شاي ريزي'},price:'35 ₺',imgs:['https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80'],detail:{description:{tr:'Rize yamaçlarından siyah çay.',en:'Black tea from Rize slopes.',ar:'شاي أسود من ريزي.'},brand:{tr:'Çaykur Rize',en:'Çaykur Rize',ar:'جايكور ريزي'},origin:{tr:'Rize, Türkiye',en:'Rize, Turkey',ar:'ريزي، تركيا'},tags:{tr:['Kafeinli'],en:['Caffeinated'],ar:['كافيين']},nutrition:{calories:2,protein:0,carbs:0.5,fat:0,sugar:0,fiber:0},allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}}},
+      {name:{tr:'Nane Limon',en:'Mint Lemon',ar:'نعناع بالليمون'},desc:{tr:'Taze nane + limon',en:'Fresh mint + lemon',ar:'نعناع + ليمون'},price:'45 ₺',imgs:['https://images.unsplash.com/photo-1563911892437-1feda0179e1b?w=600&q=80'],detail:{description:{tr:'Taze nane + limon suyu.',en:'Fresh mint + lemon juice.',ar:'نعناع طازج + ليمون.'},brand:{tr:'Taze yerel',en:'Fresh local',ar:'طازج محلي'},origin:{tr:'Yerel',en:'Local',ar:'محلي'},tags:{tr:['Kafeinsiz'],en:['Caffeine-free'],ar:['بدون كافيين']},nutrition:{calories:5,protein:0.1,carbs:1,fat:0,sugar:0.5,fiber:0.1},allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}}},
+      {name:{tr:'Ihlamur',en:'Linden Tea',ar:'شاي الزيزفون'},desc:{tr:'Sakinleştirici',en:'Calming',ar:'مهدئ'},price:'45 ₺',imgs:['https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&q=80'],detail:{description:{tr:'Doğal ıhlamur çiçeği.',en:'Natural linden flowers.',ar:'أزهار زيزفون طبيعية.'},brand:{tr:'Doğadan',en:'Doğadan',ar:'دوغادان'},origin:{tr:'Anadolu',en:'Anatolia',ar:'الأناضول'},tags:{tr:['Kafeinsiz','Doğal'],en:['Caffeine-free','Natural'],ar:['بدون كافيين','طبيعي']},nutrition:{calories:3,protein:0,carbs:0.7,fat:0,sugar:0,fiber:0},allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}}},
     ]},
-    { title:{tr:'Soğuk İçecekler',en:'Cold Drinks',ar:'مشروبات باردة'}, items:[
-      { name:{tr:'Limonata',en:'Lemonade',ar:'ليمونادة'}, desc:{tr:'Ev yapımı, naneli',en:'Homemade with mint',ar:'منزلية مع نعناع'}, price:'55 ₺',
-        imgs:['https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=600&q=80'],
-        detail:{
-          description:{tr:'Taze sıkılmış limon suyu, şeker şurubu ve taze nane yapraklarıyla ev yapımı tarife göre hazırlanır. Buzlu servis edilir.',en:'Freshly squeezed lemon juice prepared with sugar syrup and fresh mint leaves according to homemade recipe. Served with ice.',ar:'عصير الليمون الطازج المعصور مع شراب السكر وأوراق النعناع الطازجة حسب الوصفة المنزلية. يُقدم مع الثلج.'},
-          brand:{tr:'Taze limon — ev yapımı şurup',en:'Fresh lemon — homemade syrup',ar:'ليمون طازج — شراب منزلي'},
-          origin:{tr:'Ege limonu, yerel nane',en:'Aegean lemon, local mint',ar:'ليمون إيجة، نعناع محلي'},
-          tags:{tr:['Vegan','Serinletici','Ev Yapımı'],en:['Vegan','Refreshing','Homemade'],ar:['نباتي','منعش','منزلي الصنع']},
-          nutrition:{calories:85,protein:0.2,carbs:22,fat:0,sugar:20,fiber:0.3},
-          allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}
-        }
-      },
-      { name:{tr:'Taze Portakal Suyu',en:'Fresh Orange Juice',ar:'عصير برتقال طازج'}, desc:{tr:'Günlük taze sıkılmış',en:'Freshly squeezed daily',ar:'معصور طازج يومياً'}, price:'65 ₺',
-        imgs:['https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80'],
-        detail:{
-          description:{tr:'Her sabah taze sıkılan portakal suyu, katkısız ve doğaldır. 4-5 adet portakaldan elde edilir.',en:'Orange juice freshly squeezed every morning, additive-free and natural. Made from 4-5 oranges.',ar:'عصير البرتقال المعصور طازجاً كل صباح، خالٍ من الإضافات وطبيعي. يُصنع من 4-5 برتقالات.'},
-          brand:{tr:'Valencia portakalı — İspanya',en:'Valencia orange — Spain',ar:'برتقال فالنسيا — إسبانيا'},
-          origin:{tr:'İspanya Valencia',en:'Spain Valencia',ar:'فالنسيا، إسبانيا'},
-          tags:{tr:['%100 Doğal','C Vitamini','Katkısız'],en:['100% Natural','Vitamin C','No Additives'],ar:['100% طبيعي','فيتامين C','بدون إضافات']},
-          nutrition:{calories:112,protein:1.7,carbs:26,fat:0.5,sugar:21,fiber:0.5},
-          allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}
-        }
-      },
+    {title:{tr:'Soğuk İçecekler',en:'Cold Drinks',ar:'مشروبات باردة'},items:[
+      {name:{tr:'Limonata',en:'Lemonade',ar:'ليمونادة'},desc:{tr:'Ev yapımı, naneli',en:'Homemade with mint',ar:'منزلية مع نعناع'},price:'55 ₺',imgs:['https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=600&q=80'],detail:{description:{tr:'Taze limon, şurup, nane, buz.',en:'Fresh lemon, syrup, mint, ice.',ar:'ليمون طازج وشراب ونعناع.'},brand:{tr:'Ev yapımı',en:'Homemade',ar:'منزلي'},origin:{tr:'Ege limonu',en:'Aegean lemon',ar:'ليمون إيجة'},tags:{tr:['Vegan'],en:['Vegan'],ar:['نباتي']},nutrition:{calories:85,protein:0.2,carbs:22,fat:0,sugar:20,fiber:0.3},allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}}},
+      {name:{tr:'Portakal Suyu',en:'Orange Juice',ar:'عصير برتقال'},desc:{tr:'Günlük taze sıkılmış',en:'Freshly squeezed daily',ar:'معصور يومياً'},price:'65 ₺',imgs:['https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80'],detail:{description:{tr:'Her sabah taze sıkılan, katkısız.',en:'Freshly squeezed every morning.',ar:'معصور كل صباح.'},brand:{tr:'Valencia — İspanya',en:'Valencia — Spain',ar:'فالنسيا'},origin:{tr:'İspanya',en:'Spain',ar:'إسبانيا'},tags:{tr:['Doğal','C Vitamini'],en:['Natural','Vitamin C'],ar:['طبيعي','فيتامين C']},nutrition:{calories:112,protein:1.7,carbs:26,fat:0.5,sugar:21,fiber:0.5},allergens:{tr:['Yok'],en:['None'],ar:['لا يوجد']}}},
     ]}
   ]},
-  { key:'yiyecek', sections:[
-    { title:{tr:'Kahvaltılık',en:'Breakfast',ar:'إفطار'}, items:[
-      { name:{tr:'Avokado Toast',en:'Avocado Toast',ar:'توست الأفوكادو'}, desc:{tr:'Ekşi maya + çeri domates + feta',en:'Sourdough + cherry tomato + feta',ar:'خبز مخمر + طماطم كرزية + فيتا'}, price:'120 ₺',
-        imgs:['https://images.unsplash.com/photo-1588137378633-dea1336ce1e2?w=600&q=80','https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80'],
-        detail:{
-          description:{tr:'Günlük fırından gelen ekşi maya ekmeği üzerine ezilmiş taze avokado, çeri domates, feta peyniri ve limon suyu ile servis edilir. Üzerine pul biber ve zeytinyağı drizzle yapılır.',en:'Freshly mashed avocado served on sourdough bread from the daily bakery, with cherry tomatoes, feta cheese and lemon juice. Drizzled with red pepper flakes and olive oil.',ar:'أفوكادو طازج مهروس يُقدم على خبز العجين المخمر من المخبز اليومي مع طماطم كرزية وجبنة فيتا وعصير الليمون. يُرش عليه رقائق الفلفل الأحمر وزيت الزيتون.'},
-          brand:{tr:'Ekşi maya ekmeği — günlük yerel fırın',en:'Sourdough — daily local bakery',ar:'خبز العجين المخمر — مخبز محلي يومي'},
-          origin:{tr:'Meksika avokadosu, Ege zeytinyağı',en:'Mexican avocado, Aegean olive oil',ar:'أفوكادو مكسيكي، زيت زيتون إيجة'},
-          tags:{tr:['Vejetaryen','Sağlıklı','Glutensiz Ekmek Mevcut'],en:['Vegetarian','Healthy','GF bread available'],ar:['نباتي','صحي','خبز خالٍ من الجلوتين متاح']},
-          nutrition:{calories:320,protein:9,carbs:28,fat:19,sugar:3,fiber:8},
-          allergens:{tr:['Gluten','Süt'],en:['Gluten','Milk'],ar:['جلوتين','حليب']}
-        }
-      },
-      { name:{tr:'Menemen',en:'Menemen',ar:'منيمن'}, desc:{tr:'Geleneksel tarif, ekmekli',en:'Turkish scramble with bread',ar:'بيض تركي مع خبز'}, price:'95 ₺',
-        imgs:['https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80'],
-        detail:{
-          description:{tr:'Taze domates, sivri biber ve yumurtanın geleneksel yöntemle pişirildiği bir Türk kahvaltı klasiği. Tereyağlı taze ekmekle servis edilir.',en:'A Turkish breakfast classic with fresh tomatoes, green peppers and eggs cooked traditionally. Served with buttered fresh bread.',ar:'كلاسيكية الفطور التركية مع الطماطم الطازجة والفلفل الأخضر والبيض المطبوخ بالطريقة التقليدية. يُقدم مع خبز طازج بالزبدة.'},
-          brand:{tr:'Günlük taze yumurta — köy ürünü',en:'Daily fresh eggs — farm produce',ar:'بيض طازج يومي — منتج مزرعة'},
-          origin:{tr:'Yerel çiftlik yumurtası, Anadolu tarifi',en:'Local farm eggs, Anatolian recipe',ar:'بيض مزرعة محلي، وصفة أناضولية'},
-          tags:{tr:['Vejetaryen','Geleneksel','Acısız/Acılı'],en:['Vegetarian','Traditional','Mild/Spicy'],ar:['نباتي','تقليدي','خفيف/حار']},
-          nutrition:{calories:285,protein:16,carbs:18,fat:17,sugar:5,fiber:3},
-          allergens:{tr:['Yumurta','Gluten'],en:['Eggs','Gluten'],ar:['بيض','جلوتين']}
-        }
-      },
-      { name:{tr:'Granola Kasesi',en:'Granola Bowl',ar:'وعاء الجرانولا'}, desc:{tr:'Yoğurt + meyve + bal',en:'Yogurt + fruit + honey',ar:'زبادي + فاكهة + عسل'}, price:'90 ₺',
-        imgs:['https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=600&q=80'],
-        detail:{
-          description:{tr:'Fırında kavrulmuş yulaf ve kuruyemiş karışımı, Yunan yoğurduyla servis edilir. Üzerine taze mevsim meyveleri ve çiçek balı eklenir.',en:'Oven-roasted oat and nut mix served with Greek yogurt. Topped with fresh seasonal fruits and flower honey.',ar:'خليط الشوفان والمكسرات المحمصة في الفرن تُقدم مع الزبادي اليوناني. تُزين بالفواكه الموسمية الطازجة وعسل الزهور.'},
-          brand:{tr:'Yunan yoğurdu + yerel bal',en:'Greek yogurt + local honey',ar:'زبادي يوناني + عسل محلي'},
-          origin:{tr:'Yunanistan yoğurdu, Anadolu balı',en:'Greek yogurt, Anatolian honey',ar:'زبادي يوناني، عسل أناضولي'},
-          tags:{tr:['Vejetaryen','Yüksek Protein','Lif Deposu'],en:['Vegetarian','High Protein','High Fiber'],ar:['نباتي','بروتين عالٍ','غني بالألياف']},
-          nutrition:{calories:340,protein:14,carbs:45,fat:11,sugar:22,fiber:5},
-          allergens:{tr:['Süt','Yulaf (Gluten)','Kuruyemiş'],en:['Milk','Oats (Gluten)','Nuts'],ar:['حليب','شوفان (جلوتين)','مكسرات']}
-        }
-      },
+  {key:'yiyecek',sections:[
+    {title:{tr:'Kahvaltılık',en:'Breakfast',ar:'إفطار'},items:[
+      {name:{tr:'Avokado Toast',en:'Avocado Toast',ar:'توست أفوكادو'},desc:{tr:'Ekşi maya + feta',en:'Sourdough + feta',ar:'خبز مخمر + فيتا'},price:'120 ₺',imgs:['https://images.unsplash.com/photo-1588137378633-dea1336ce1e2?w=600&q=80'],detail:{description:{tr:'Ekşi maya üzeri avokado, feta, çeri domates.',en:'Sourdough with avocado, feta, cherry tomato.',ar:'خبز مخمر مع أفوكادو وفيتا.'},brand:{tr:'Günlük fırın',en:'Daily bakery',ar:'مخبز يومي'},origin:{tr:'Meksika avokadosu',en:'Mexican avocado',ar:'أفوكادو مكسيكي'},tags:{tr:['Vejetaryen'],en:['Vegetarian'],ar:['نباتي']},nutrition:{calories:320,protein:9,carbs:28,fat:19,sugar:3,fiber:8},allergens:{tr:['Gluten','Süt'],en:['Gluten','Milk'],ar:['جلوتين','حليب']}}},
+      {name:{tr:'Menemen',en:'Menemen',ar:'منيمن'},desc:{tr:'Geleneksel tarif',en:'Turkish scramble',ar:'بيض تركي'},price:'95 ₺',imgs:['https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80'],detail:{description:{tr:'Domates, biber, yumurta, ekmekle.',en:'Tomato, pepper, eggs, with bread.',ar:'طماطم وفلفل وبيض مع خبز.'},brand:{tr:'Köy yumurtası',en:'Farm eggs',ar:'بيض مزرعة'},origin:{tr:'Anadolu',en:'Anatolia',ar:'الأناضول'},tags:{tr:['Vejetaryen'],en:['Vegetarian'],ar:['نباتي']},nutrition:{calories:285,protein:16,carbs:18,fat:17,sugar:5,fiber:3},allergens:{tr:['Yumurta','Gluten'],en:['Eggs','Gluten'],ar:['بيض','جلوتين']}}},
     ]},
-    { title:{tr:'Sandviçler & Tostlar',en:'Sandwiches & Toasts',ar:'سندويشات وتوست'}, items:[
-      { name:{tr:'Club Sandviç',en:'Club Sandwich',ar:'كلوب سندويش'}, desc:{tr:'Tavuk + marul + domates + sos',en:'Chicken + lettuce + tomato + sauce',ar:'دجاج + خس + طماطم + صوص'}, price:'130 ₺',
-        imgs:['https://images.unsplash.com/photo-1567234669003-dce7a7a88821?w=600&q=80'],
-        detail:{
-          description:{tr:'Izgara tavuk göğsü, taze marul, domates, cheddar peyniri ve özel ev yapımı mayonez sosuyla hazırlanan üç katlı sandviç.',en:'Three-layer sandwich with grilled chicken breast, fresh lettuce, tomato, cheddar cheese and special homemade mayo sauce.',ar:'سندويش ثلاثي الطبقات مع صدر دجاج مشوي وخس طازج وطماطم وجبنة شيدر وصوص المايونيز المنزلي الخاص.'},
-          brand:{tr:'Günlük taze ekmek — yerel fırın',en:'Daily fresh bread — local bakery',ar:'خبز طازج يومي — مخبز محلي'},
-          origin:{tr:'Amerikan usulü, yerel malzeme',en:'American style, local ingredients',ar:'الأسلوب الأمريكي، مكونات محلية'},
-          tags:{tr:['Yüksek Protein','Doyurucu','Özel Sos'],en:['High Protein','Filling','Special Sauce'],ar:['بروتين عالٍ','مُشبع','صوص خاص']},
-          nutrition:{calories:480,protein:32,carbs:38,fat:22,sugar:5,fiber:3},
-          allergens:{tr:['Gluten','Süt','Yumurta'],en:['Gluten','Milk','Eggs'],ar:['جلوتين','حليب','بيض']}
-        }
-      },
-      { name:{tr:'Panini',en:'Panini',ar:'باниني'}, desc:{tr:'Mozzarella + domates + fesleğen',en:'Mozzarella + tomato + basil',ar:'موزاريلا + طماطم + ريحان'}, price:'115 ₺',
-        imgs:['https://images.unsplash.com/photo-1509722747041-616f39b57569?w=600&q=80'],
-        detail:{
-          description:{tr:'İtalyan usulü ızgara ekmeğe taze mozzarella, dilim domates ve taze fesleğen yerleştirilerek panini ızgarasında sıkıştırılır. Üzerine zeytinyağı gezdirilir.',en:'Fresh mozzarella, sliced tomato and fresh basil placed in Italian style bread and pressed in panini grill. Drizzled with olive oil.',ar:'موزاريلا طازجة وشرائح طماطم وريحان طازج في خبز إيطالي ويُضغط في شواية البانيني. يُرش عليه زيت الزيتون.'},
-          brand:{tr:'Fior di Latte mozzarella — İtalya',en:'Fior di Latte mozzarella — Italy',ar:'موزاريلا فيور دي لاتي — إيطاليا'},
-          origin:{tr:'İtalya usulü, İtalyan peyniri',en:'Italian style, Italian cheese',ar:'الأسلوب الإيطالي، جبنة إيطالية'},
-          tags:{tr:['Vejetaryen','İtalyan Usulü','Sıcak'],en:['Vegetarian','Italian Style','Hot'],ar:['نباتي','الأسلوب الإيطالي','ساخن']},
-          nutrition:{calories:390,protein:18,carbs:35,fat:19,sugar:4,fiber:2},
-          allergens:{tr:['Gluten','Süt'],en:['Gluten','Milk'],ar:['جلوتين','حليب']}
-        }
-      },
-      { name:{tr:'Somon Toast',en:'Salmon Toast',ar:'توست السلمون'}, desc:{tr:'Füme somon + krem peynir',en:'Smoked salmon + cream cheese',ar:'سلمون مدخن + جبنة كريمية'}, price:'145 ₺',
-        imgs:['https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&q=80'],
-        detail:{
-          description:{tr:'Taze çavdar ekmeği üzerine krem peynir sürülür, üzerine İskoç füme somonu yerleştirilir. Kapari, kırmızı soğan ve dereotu ile servis edilir.',en:'Cream cheese spread on fresh rye bread, topped with Scottish smoked salmon. Served with capers, red onion and dill.',ar:'جبنة كريمية على خبز الجاودار الطازج مع سلمون مدخن اسكتلندي. يُقدم مع الكابر والبصل الأحمر والشبت.'},
-          brand:{tr:'Scottish smoked salmon — İskoçya',en:'Scottish smoked salmon — Scotland',ar:'سلمون مدخن اسكتلندي — اسكتلندا'},
-          origin:{tr:'İskoçya Atlantik somonu',en:'Scottish Atlantic salmon',ar:'سلمون أطلسي اسكتلندي'},
-          tags:{tr:['Omega-3','Yüksek Protein','Premium'],en:['Omega-3','High Protein','Premium'],ar:['أوميغا-3','بروتين عالٍ','بريميوم']},
-          nutrition:{calories:350,protein:24,carbs:22,fat:18,sugar:2,fiber:3},
-          allergens:{tr:['Balık','Gluten','Süt'],en:['Fish','Gluten','Milk'],ar:['سمك','جلوتين','حليب']}
-        }
-      },
+    {title:{tr:'Sandviçler',en:'Sandwiches',ar:'سندويشات'},items:[
+      {name:{tr:'Club Sandviç',en:'Club Sandwich',ar:'كلوب سندويش'},desc:{tr:'Tavuk + marul + sos',en:'Chicken + lettuce + sauce',ar:'دجاج + خس'},price:'130 ₺',imgs:['https://images.unsplash.com/photo-1567234669003-dce7a7a88821?w=600&q=80'],detail:{description:{tr:'Izgara tavuk, marul, domates, ev mayonezi.',en:'Grilled chicken, lettuce, tomato, homemade mayo.',ar:'دجاج مشوي وخس وطماطم.'},brand:{tr:'Günlük ekmek',en:'Daily bread',ar:'خبز يومي'},origin:{tr:'Amerikan usulü',en:'American style',ar:'أمريكي'},tags:{tr:['Yüksek Protein'],en:['High Protein'],ar:['بروتين عالٍ']},nutrition:{calories:480,protein:32,carbs:38,fat:22,sugar:5,fiber:3},allergens:{tr:['Gluten','Süt','Yumurta'],en:['Gluten','Milk','Eggs'],ar:['جلوتين','حليب','بيض']}}},
+      {name:{tr:'Somon Toast',en:'Salmon Toast',ar:'توست سلمون'},desc:{tr:'Füme somon + krem peynir',en:'Smoked salmon + cream cheese',ar:'سلمون مدخن'},price:'145 ₺',imgs:['https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&q=80'],detail:{description:{tr:'İskoç füme somonu, kapari, dereotu.',en:'Scottish smoked salmon, capers, dill.',ar:'سلمون اسكتلندي مع كابر.'},brand:{tr:'Scottish smoked',en:'Scottish smoked',ar:'مدخن اسكتلندي'},origin:{tr:'İskoçya',en:'Scotland',ar:'اسكتلندا'},tags:{tr:['Omega-3','Premium'],en:['Omega-3','Premium'],ar:['أوميغا-3','بريميوم']},nutrition:{calories:350,protein:24,carbs:22,fat:18,sugar:2,fiber:3},allergens:{tr:['Balık','Gluten','Süt'],en:['Fish','Gluten','Milk'],ar:['سمك','جلوتين','حليب']}}},
     ]}
   ]},
-  { key:'tatli', sections:[
-    { title:{tr:'Tatlılar',en:'Desserts',ar:'حلويات'}, items:[
-      { name:{tr:'Cheesecake',en:'Cheesecake',ar:'تشيزكيك'}, desc:{tr:'Günlük taze, mevsim meyveli',en:'Fresh daily, seasonal fruit',ar:'طازج يومياً مع فاكهة موسمية'}, price:'110 ₺',
-        imgs:['https://images.unsplash.com/photo-1524351199678-941a58a3df50?w=600&q=80','https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80'],
-        detail:{
-          description:{tr:'Philadelphia krem peyniriyle hazırlanan, bisküvi tabanı üzerine dökülen New York usulü cheesecake. Her gün taze yapılır, üzerine mevsim meyvesi jölesi dökülür.',en:'New York style cheesecake made with Philadelphia cream cheese on a biscuit base. Made fresh daily, topped with seasonal fruit jelly.',ar:'تشيزكيك على طريقة نيويورك مصنوع من جبنة فيلادلفيا الكريمية على قاعدة البسكويت. يُصنع طازجاً يومياً ويُزين بهلام الفاكهة الموسمية.'},
-          brand:{tr:'Philadelphia krem peyniri',en:'Philadelphia cream cheese',ar:'جبنة فيلادلفيا الكريمية'},
-          origin:{tr:'New York usulü tarif',en:'New York style recipe',ar:'وصفة على طريقة نيويورك'},
-          tags:{tr:['Günlük Taze','New York Usulü','Mevsim Meyveli'],en:['Daily Fresh','NY Style','Seasonal Fruit'],ar:['طازج يومياً','طريقة نيويورك','فاكهة موسمية']},
-          nutrition:{calories:380,protein:7,carbs:35,fat:24,sugar:28,fiber:1},
-          allergens:{tr:['Süt','Yumurta','Gluten'],en:['Milk','Eggs','Gluten'],ar:['حليب','بيض','جلوتين']}
-        }
-      },
-      { name:{tr:'Brownie',en:'Brownie',ar:'براوني'}, desc:{tr:'Sıcak servis, dondurmalı',en:'Warm with ice cream',ar:'دافئ مع آيس كريم'}, price:'95 ₺',
-        imgs:['https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=600&q=80'],
-        detail:{
-          description:{tr:'Callebaut Belçika çikolatası kullanılarak hazırlanan, içi yumuşak dışı çıtır brownie. Sıcak olarak servis edilir, yanında vanilya dondurması ile sunulur.',en:'Soft inside, crispy outside brownie made with Callebaut Belgian chocolate. Served warm with vanilla ice cream.',ar:'براوني ناعم من الداخل ومقرمش من الخارج مصنوع بشوكولاتة كاليبو البلجيكية. يُقدم ساخناً مع آيس كريم الفانيليا.'},
-          brand:{tr:'Callebaut %70 bitter çikolata',en:'Callebaut 70% dark chocolate',ar:'كاليبو شوكولاتة داكنة 70%'},
-          origin:{tr:'Belçika çikolatası, ev yapımı tarif',en:'Belgian chocolate, homemade recipe',ar:'شوكولاتة بلجيكية، وصفة منزلية'},
-          tags:{tr:['Sıcak Servis','Dondurmalı','Çikolatalı'],en:['Warm Serve','With Ice Cream','Chocolate'],ar:['تقديم ساخن','مع آيس كريم','شوكولاتة']},
-          nutrition:{calories:420,protein:6,carbs:48,fat:24,sugar:38,fiber:3},
-          allergens:{tr:['Süt','Yumurta','Gluten','Soya'],en:['Milk','Eggs','Gluten','Soy'],ar:['حليب','بيض','جلوتين','صويا']}
-        }
-      },
-      { name:{tr:'Tiramisu',en:'Tiramisu',ar:'تيراميسو'}, desc:{tr:'İtalyan tarifi',en:'Classic Italian recipe',ar:'وصفة إيطالية كلاسيكية'}, price:'100 ₺',
-        imgs:['https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&q=80'],
-        detail:{
-          description:{tr:'Mascarpone peyniri, espresso ve ladyfinger bisküvileriyle hazırlanan otantik İtalyan tatlısı. Üzerine bol kakao tozu serpilerek servis edilir.',en:'Authentic Italian dessert made with mascarpone cheese, espresso and ladyfinger biscuits. Served with generous cocoa powder on top.',ar:'حلوى إيطالية أصيلة مصنوعة من جبنة الماسكاربوني والإسبريسو وبسكويت السافويارد. تُقدم مع مسحوق كاكاو وفير فوقها.'},
-          brand:{tr:'Galbani mascarpone — İtalya',en:'Galbani mascarpone — Italy',ar:'جالباني ماسكاربوني — إيطاليا'},
-          origin:{tr:'Veneto, İtalya — geleneksel tarif',en:'Veneto, Italy — traditional recipe',ar:'فينيتو، إيطاليا — وصفة تقليدية'},
-          tags:{tr:['İtalyan Usulü','Espressolu','Klasik'],en:['Italian Style','With Espresso','Classic'],ar:['الأسلوب الإيطالي','مع إسبريسو','كلاسيكي']},
-          nutrition:{calories:360,protein:8,carbs:32,fat:22,sugar:24,fiber:1},
-          allergens:{tr:['Süt','Yumurta','Gluten'],en:['Milk','Eggs','Gluten'],ar:['حليب','بيض','جلوتين']}
-        }
-      },
-      { name:{tr:'Waffle',en:'Waffle',ar:'وافل'}, desc:{tr:'Çikolata sosu + muz + dondurma',en:'Chocolate + banana + ice cream',ar:'شوكولاتة + موز + آيس كريم'}, price:'120 ₺',
-        imgs:['https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=600&q=80'],
-        detail:{
-          description:{tr:'Taze waffle hamuru döküm demirde pişirilir. Üzerine Callebaut çikolata sosu, taze muz dilimleri ve vanilya dondurması ile servis edilir.',en:'Fresh waffle batter cooked on cast iron. Served with Callebaut chocolate sauce, fresh banana slices and vanilla ice cream.',ar:'عجينة الوافل الطازجة تُطهى على مقلاة حديدية. تُقدم مع صوص شوكولاتة كاليبو وشرائح موز طازجة وآيس كريم الفانيليا.'},
-          brand:{tr:'Callebaut çikolata + taze muz',en:'Callebaut chocolate + fresh banana',ar:'شوكولاتة كاليبو + موز طازج'},
-          origin:{tr:'Belçika usulü waffle, Belçika çikolatası',en:'Belgian style waffle, Belgian chocolate',ar:'وافل بلجيكي، شوكولاتة بلجيكية'},
-          tags:{tr:['Sıcak Servis','Çikolatalı','Popüler'],en:['Warm Serve','Chocolate','Popular'],ar:['تقديم ساخن','شوكولاتة','شعبي']},
-          nutrition:{calories:510,protein:9,carbs:62,fat:26,sugar:40,fiber:3},
-          allergens:{tr:['Süt','Yumurta','Gluten','Soya'],en:['Milk','Eggs','Gluten','Soy'],ar:['حليب','بيض','جلوتين','صويا']}
-        }
-      },
-      { name:{tr:'Krep',en:'Crêpe',ar:'كريب'}, desc:{tr:'Nutella + muz veya meyveli',en:'Nutella + banana or seasonal fruits',ar:'نوتيلا + موز أو فاكهة موسمية'}, price:'105 ₺',
-        imgs:['https://images.unsplash.com/photo-1519676867240-f03562e64548?w=600&q=80'],
-        detail:{
-          description:{tr:'İnce Fransız krepine Nutella sürülür, taze muz veya mevsim meyveleriyle sarılarak servis edilir. Üzerine pudra şekeri serpilir.',en:'Nutella spread on thin French crêpe, rolled with fresh banana or seasonal fruits. Topped with powdered sugar.',ar:'نوتيلا تُدهن على كريب فرنسي رفيع، يُلف مع الموز الطازج أو الفواكه الموسمية. يُرش فوقه السكر البودرة.'},
-          brand:{tr:'Nutella + taze mevsim meyveleri',en:'Nutella + fresh seasonal fruits',ar:'نوتيلا + فواكه موسمية طازجة'},
-          origin:{tr:'Fransız usulü, İtalyan Nutella',en:'French style, Italian Nutella',ar:'الأسلوب الفرنسي، نوتيلا إيطالية'},
-          tags:{tr:['Nutellalı','İnce','Meyveli'],en:['Nutella','Thin','With Fruits'],ar:['نوتيلا','رفيع','بالفاكهة']},
-          nutrition:{calories:380,protein:7,carbs:50,fat:17,sugar:35,fiber:3},
-          allergens:{tr:['Süt','Yumurta','Gluten','Fındık','Soya'],en:['Milk','Eggs','Gluten','Hazelnuts','Soy'],ar:['حليب','بيض','جلوتين','بندق','صويا']}
-        }
-      },
-      { name:{tr:'Profiterol',en:'Profiterole',ar:'بروفيتيرول'}, desc:{tr:'Çikolata sosu, 3 adet',en:'Chocolate sauce, 3 pcs',ar:'صوص شوكولاتة، 3 قطع'}, price:'90 ₺',
-        imgs:['https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=600&q=80'],
-        detail:{
-          description:{tr:'Her gün taze pişirilen üç adet choux pastry, içi vanilya kremasıyla doldurulur. Üzerine sıcak Callebaut çikolata sosu dökülür.',en:'Three freshly baked choux pastry pieces filled with vanilla cream. Topped with warm Callebaut chocolate sauce.',ar:'ثلاث قطع شو باستري تُخبز يومياً طازجة ومحشوة بكريم الفانيليا. يُسكب فوقها صوص شوكولاتة كاليبو دافئ.'},
-          brand:{tr:'Callebaut çikolata, günlük taze hamur',en:'Callebaut chocolate, daily fresh dough',ar:'شوكولاتة كاليبو، عجينة طازجة يومية'},
-          origin:{tr:'Fransız pastacılık geleneği',en:'French pastry tradition',ar:'التقليد الفرنسي للمعجنات'},
-          tags:{tr:['Fransız Usulü','Günlük Taze','Çikolatalı'],en:['French Style','Daily Fresh','Chocolate'],ar:['الأسلوب الفرنسي','طازج يومياً','شوكولاتة']},
-          nutrition:{calories:290,protein:5,carbs:30,fat:17,sugar:22,fiber:1},
-          allergens:{tr:['Süt','Yumurta','Gluten','Soya'],en:['Milk','Eggs','Gluten','Soy'],ar:['حليب','بيض','جلوتين','صويا']}
-        }
-      },
-      { name:{tr:'Dondurma',en:'Ice Cream',ar:'آيس كريم'}, desc:{tr:'3 top, günlük taze',en:'3 scoops, fresh daily',ar:'3 كرات طازجة يومياً'}, price:'80 ₺',
-        imgs:['https://images.unsplash.com/photo-1488900128323-21503983a07e?w=600&q=80'],
-        detail:{
-          description:{tr:'Günlük taze hazırlanan artizanal dondurma, 3 top olarak servis edilir. Çikolata, vanilya, çilek, fıstık ezmesi seçenekleri mevcuttur.',en:'Artisanal ice cream prepared fresh daily, served as 3 scoops. Chocolate, vanilla, strawberry, peanut butter options available.',ar:'آيس كريم حرفي يُحضر طازجاً يومياً، يُقدم 3 كرات. خيارات شوكولاتة وفانيليا وفراولة وزبدة الفول السوداني متاحة.'},
-          brand:{tr:'Günlük artizanal üretim',en:'Daily artisanal production',ar:'إنتاج حرفي يومي'},
-          origin:{tr:'Yerelde üretim, doğal malzeme',en:'Locally produced, natural ingredients',ar:'إنتاج محلي، مكونات طبيعية'},
-          tags:{tr:['Artizanal','Günlük Taze','Seçenekli'],en:['Artisanal','Daily Fresh','Multiple flavors'],ar:['حرفي','طازج يومياً','نكهات متعددة']},
-          nutrition:{calories:240,protein:4,carbs:30,fat:12,sugar:26,fiber:0},
-          allergens:{tr:['Süt','Yumurta'],en:['Milk','Eggs'],ar:['حليب','بيض']}
-        }
-      },
+  {key:'tatli',sections:[
+    {title:{tr:'Tatlılar',en:'Desserts',ar:'حلويات'},items:[
+      {name:{tr:'Cheesecake',en:'Cheesecake',ar:'تشيزكيك'},desc:{tr:'Günlük taze, mevsim meyveli',en:'Fresh daily, seasonal fruit',ar:'طازج يومياً'},price:'110 ₺',imgs:['https://images.unsplash.com/photo-1524351199678-941a58a3df50?w=600&q=80'],detail:{description:{tr:'Philadelphia krem peyniri, NY usulü.',en:'Philadelphia cream cheese, NY style.',ar:'جبنة فيلادلفيا، طريقة نيويورك.'},brand:{tr:'Philadelphia',en:'Philadelphia',ar:'فيلادلفيا'},origin:{tr:'New York usulü',en:'New York style',ar:'نيويورك'},tags:{tr:['Günlük Taze'],en:['Daily Fresh'],ar:['طازج يومياً']},nutrition:{calories:380,protein:7,carbs:35,fat:24,sugar:28,fiber:1},allergens:{tr:['Süt','Yumurta','Gluten'],en:['Milk','Eggs','Gluten'],ar:['حليب','بيض','جلوتين']}}},
+      {name:{tr:'Brownie',en:'Brownie',ar:'براوني'},desc:{tr:'Sıcak, dondurmalı',en:'Warm with ice cream',ar:'دافئ مع آيس كريم'},price:'95 ₺',imgs:['https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=600&q=80'],detail:{description:{tr:'Callebaut %70, sıcak servis, vanilya dondurma.',en:'Callebaut 70%, warm, vanilla ice cream.',ar:'كاليبو 70%، دافئ مع فانيليا.'},brand:{tr:'Callebaut %70',en:'Callebaut 70%',ar:'كاليبو 70%'},origin:{tr:'Belçika',en:'Belgium',ar:'بلجيكا'},tags:{tr:['Çikolatalı','Sıcak'],en:['Chocolate','Warm'],ar:['شوكولاتة','ساخن']},nutrition:{calories:420,protein:6,carbs:48,fat:24,sugar:38,fiber:3},allergens:{tr:['Süt','Yumurta','Gluten'],en:['Milk','Eggs','Gluten'],ar:['حليب','بيض','جلوتين']}}},
+      {name:{tr:'Waffle',en:'Waffle',ar:'وافل'},desc:{tr:'Çikolata + muz + dondurma',en:'Chocolate + banana + ice cream',ar:'شوكولاتة + موز'},price:'120 ₺',imgs:['https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=600&q=80'],detail:{description:{tr:'Taze waffle, Callebaut sos, muz, vanilya.',en:'Fresh waffle, Callebaut sauce, banana, vanilla.',ar:'وافل طازج مع صوص كاليبو وموز.'},brand:{tr:'Callebaut sos',en:'Callebaut sauce',ar:'صوص كاليبو'},origin:{tr:'Belçika usulü',en:'Belgian style',ar:'بلجيكي'},tags:{tr:['Popüler'],en:['Popular'],ar:['شعبي']},nutrition:{calories:510,protein:9,carbs:62,fat:26,sugar:40,fiber:3},allergens:{tr:['Süt','Yumurta','Gluten'],en:['Milk','Eggs','Gluten'],ar:['حليب','بيض','جلوتين']}}},
+      {name:{tr:'Tiramisu',en:'Tiramisu',ar:'تيراميسو'},desc:{tr:'İtalyan tarifi',en:'Classic Italian',ar:'إيطالي كلاسيكي'},price:'100 ₺',imgs:['https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&q=80'],detail:{description:{tr:'Mascarpone, espresso, ladyfinger.',en:'Mascarpone, espresso, ladyfinger.',ar:'ماسكاربوني وإسبريسو.'},brand:{tr:'Galbani mascarpone',en:'Galbani mascarpone',ar:'جالباني ماسكاربوني'},origin:{tr:'Veneto, İtalya',en:'Veneto, Italy',ar:'إيطاليا'},tags:{tr:['İtalyan'],en:['Italian'],ar:['إيطالي']},nutrition:{calories:360,protein:8,carbs:32,fat:22,sugar:24,fiber:1},allergens:{tr:['Süt','Yumurta','Gluten'],en:['Milk','Eggs','Gluten'],ar:['حليب','بيض','جلوتين']}}},
     ]}
   ]}
 ];
-
-let currentLang = 'tr';
-
-function buildMenu(lang) {
-  const t = T[lang];
-  const tabsEl = document.getElementById('cat-tabs');
-  const bodyEl = document.getElementById('menu-body');
-  tabsEl.innerHTML = '';
-  bodyEl.innerHTML = '';
-  MENU.forEach((cat, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'cat-tab' + (i === 0 ? ' active' : '');
-    btn.textContent = t.cats[i];
-    btn.onclick = () => {
-      document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('cat-' + cat.key).classList.add('active');
-    };
+let currentLang='tr';
+function buildMenu(lang){
+  const t=T[lang],tabsEl=document.getElementById('cat-tabs'),bodyEl=document.getElementById('menu-body');
+  tabsEl.innerHTML='';bodyEl.innerHTML='';
+  MENU.forEach((cat,i)=>{
+    const btn=document.createElement('button');
+    btn.className='cat-tab'+(i===0?' active':'');btn.textContent=t.cats[i];
+    btn.onclick=()=>{document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.category').forEach(c=>c.classList.remove('active'));btn.classList.add('active');document.getElementById('cat-'+cat.key).classList.add('active');};
     tabsEl.appendChild(btn);
-    const catDiv = document.createElement('div');
-    catDiv.id = 'cat-' + cat.key;
-    catDiv.className = 'category' + (i === 0 ? ' active' : '');
-    cat.sections.forEach(sec => {
-      const st = document.createElement('div');
-      st.className = 'section-title';
-      st.textContent = sec.title[lang];
-      catDiv.appendChild(st);
-      const card = document.createElement('div');
-      card.className = 'section-card';
-      sec.items.forEach(item => {
-        const row = document.createElement('div');
-        row.className = 'item';
-        row.innerHTML = `<img class="item-img" src="${item.imgs[0]}" alt="${item.name[lang]}" loading="lazy"><div class="item-info"><div class="item-name">${item.name[lang]}</div><div class="item-desc">${item.desc[lang]}</div></div><div class="item-right"><div class="item-price">${item.price}</div><div class="item-arrow">›</div></div>`;
-        row.onclick = () => openDetail(item);
-        card.appendChild(row);
+    const catDiv=document.createElement('div');catDiv.id='cat-'+cat.key;catDiv.className='category'+(i===0?' active':'');
+    cat.sections.forEach(sec=>{
+      const st=document.createElement('div');st.className='section-title';st.textContent=sec.title[lang];catDiv.appendChild(st);
+      const card=document.createElement('div');card.className='section-card';
+      sec.items.forEach(item=>{
+        const row=document.createElement('div');row.className='item';
+        row.innerHTML=`<img class="item-img" src="${item.imgs[0]}" alt="${item.name[lang]}" loading="lazy"><div class="item-info"><div class="item-name">${item.name[lang]}</div><div class="item-desc">${item.desc[lang]}</div></div><div class="item-right"><div class="item-price">${item.price}</div><div class="item-arrow">›</div></div>`;
+        row.onclick=()=>openDetail(item);card.appendChild(row);
       });
       catDiv.appendChild(card);
     });
     bodyEl.appendChild(catDiv);
   });
 }
-
-function openDetail(item) {
-  const lang = currentLang;
-  const l = T[lang].labels;
-  const d = item.detail;
-  document.getElementById('back-text').textContent = T[lang].back;
-  const photosHtml = item.imgs.map((src, i) =>
-    `<img class="detail-photo" src="${src}" alt="${item.name[lang]}" loading="lazy" style="${i===0?'width:100%;height:240px;':'width:160px;height:160px;'}">`
-  ).join('');
-  const nutr = d.nutrition;
-  const nutRows = [
-    {val: nutr.calories, unit:'kcal', label: l.calories},
-    {val: nutr.protein+'g', unit:'', label: l.protein},
-    {val: nutr.carbs+'g', unit:'', label: l.carbs},
-    {val: nutr.fat+'g', unit:'', label: l.fat},
-    {val: nutr.sugar+'g', unit:'', label: l.sugar},
-    {val: nutr.fiber+'g', unit:'', label: l.fiber},
-  ];
-  const nutHtml = nutRows.map(n => `<div class="nut-card"><div class="nut-val">${n.val}${n.unit}</div><div class="nut-label">${n.label}</div></div>`).join('');
-  const tagsHtml = d.tags[lang].map(t => `<span class="detail-tag">${t}</span>`).join('');
-  const allergensHtml = d.allergens[lang].map(a => `<span class="allergen-tag">⚠ ${a}</span>`).join('');
-  document.getElementById('detail-content').innerHTML = `
-    <div class="detail-photos">${photosHtml}</div>
-    <div class="detail-body">
-      <div class="detail-name">${item.name[lang]}</div>
-      <div class="detail-tagline">${item.desc[lang]}</div>
-      <div class="detail-price-row">
-        <div class="detail-price">${item.price}</div>
-        <div class="detail-badge">Bear Café</div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">${l.description}</div>
-        <div class="detail-desc">${d.description[lang]}</div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">${l.brand}</div>
-        <div class="detail-desc">${d.brand[lang]}</div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">${l.origin}</div>
-        <div class="detail-desc">${d.origin[lang]}</div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">${l.nutrition}</div>
-        <div class="nutrition-grid">${nutHtml}</div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">${l.ingredients}</div>
-        <div class="detail-tags">${tagsHtml}</div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">${l.allergens}</div>
-        <div class="allergen-row">${allergensHtml}</div>
-      </div>
-    </div>`;
-  document.getElementById('menu-wrap').style.display = 'none';
-  document.getElementById('detail-page').style.display = 'block';
-  window.scrollTo(0,0);
+function openDetail(item){
+  const lang=currentLang,l=T[lang].labels,d=item.detail;
+  document.getElementById('back-text').textContent=T[lang].back;
+  const photosHtml=item.imgs.map((src,i)=>`<img class="detail-photo" src="${src}" alt="${item.name[lang]}" loading="lazy" style="${i===0?'width:100%;height:240px;':'width:160px;height:160px;'}">`).join('');
+  const nutr=d.nutrition;
+  const nutHtml=[{v:nutr.calories,u:'kcal',l:l.calories},{v:nutr.protein+'g',u:'',l:l.protein},{v:nutr.carbs+'g',u:'',l:l.carbs},{v:nutr.fat+'g',u:'',l:l.fat},{v:nutr.sugar+'g',u:'',l:l.sugar},{v:nutr.fiber+'g',u:'',l:l.fiber}].map(n=>`<div class="nut-card"><div class="nut-val">${n.v}${n.u}</div><div class="nut-label">${n.l}</div></div>`).join('');
+  const tagsHtml=d.tags[lang].map(t=>`<span class="detail-tag">${t}</span>`).join('');
+  const allergensHtml=d.allergens[lang].map(a=>`<span class="allergen-tag">⚠ ${a}</span>`).join('');
+  document.getElementById('detail-content').innerHTML=`<div class="detail-photos">${photosHtml}</div><div class="detail-body"><div class="detail-name">${item.name[lang]}</div><div class="detail-tagline">${item.desc[lang]}</div><div class="detail-price-row"><div class="detail-price">${item.price}</div><div class="detail-badge">Bear Café</div></div><div class="detail-section"><div class="detail-section-title">${l.description}</div><div class="detail-desc">${d.description[lang]}</div></div><div class="detail-section"><div class="detail-section-title">${l.brand}</div><div class="detail-desc">${d.brand[lang]}</div></div><div class="detail-section"><div class="detail-section-title">${l.origin}</div><div class="detail-desc">${d.origin[lang]}</div></div><div class="detail-section"><div class="detail-section-title">${l.nutrition}</div><div class="nutrition-grid">${nutHtml}</div></div><div class="detail-section"><div class="detail-section-title">${l.ingredients}</div><div class="detail-tags">${tagsHtml}</div></div><div class="detail-section"><div class="detail-section-title">${l.allergens}</div><div class="allergen-row">${allergensHtml}</div></div></div>`;
+  document.getElementById('menu-wrap').style.display='none';document.getElementById('detail-page').style.display='block';window.scrollTo(0,0);
 }
-
-document.getElementById('detail-back').onclick = () => {
-  document.getElementById('detail-page').style.display = 'none';
-  document.getElementById('menu-wrap').style.display = 'block';
-  window.scrollTo(0,0);
-};
-
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem('bear_lang', lang);
-  document.getElementById('lang-overlay').style.display = 'none';
-  document.getElementById('menu-wrap').style.display = 'block';
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.body.className = lang === 'ar' ? 'ar' : '';
-  document.getElementById('hero-sub').textContent = T[lang].heroSub;
-  document.getElementById('wifi-label').textContent = T[lang].wifi;
+document.getElementById('detail-back').onclick=()=>{document.getElementById('detail-page').style.display='none';document.getElementById('menu-wrap').style.display='block';window.scrollTo(0,0);};
+function setLang(lang){
+  currentLang=lang;localStorage.setItem('bear_lang',lang);
+  document.getElementById('lang-overlay').style.display='none';document.getElementById('menu-wrap').style.display='block';
+  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.body.className=lang==='ar'?'ar':'';
+  document.getElementById('hero-sub').textContent=T[lang].heroSub;
+  document.getElementById('wifi-label').textContent=T[lang].wifi;
+  document.getElementById('games-section-title').textContent=T[lang].gamesTitle;
+  document.getElementById('game-back-text').textContent=T[lang].gameBack;
+  document.getElementById('waiter-btn-text').textContent=T[lang].waiterBtn;
+  document.getElementById('gc-memory').textContent=T[lang].gcMemory;
+  document.getElementById('gc-snake').textContent=T[lang].gcSnake;
+  document.getElementById('gc-word').textContent=T[lang].gcWord;
+  document.getElementById('gc-rps').textContent=T[lang].gcRps;
   buildMenu(lang);
 }
-
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('bear_lang');
-  if (saved) setLang(saved);
+function callWaiter(){const toast=document.getElementById('waiter-toast');document.getElementById('toast-text').textContent=T[currentLang].waiterToast;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),3000);}
+let currentGame=null;
+function openGame(id){
+  currentGame=id;stopSnake();stopTetris();
+  document.getElementById('menu-wrap').style.display='none';document.getElementById('game-page').style.display='block';window.scrollTo(0,0);
+  const c=document.getElementById('game-container');c.innerHTML='';
+  if(id==='2048')build2048(c);else if(id==='memory')buildMemory(c);else if(id==='snake')buildSnake(c);else if(id==='tetris')buildTetris(c);else if(id==='word')buildWord(c);else if(id==='rps')buildRPS(c);
+}
+function closeGame(){stopSnake();stopTetris();currentGame=null;document.getElementById('game-page').style.display='none';document.getElementById('menu-wrap').style.display='block';window.scrollTo(0,0);}
+/* 2048 */
+let g2={grid:null,score:0,best:0,prev:null,prevScore:0,over:false};
+function build2048(c){c.innerHTML=`<div class="g-title">🔢 2048</div><div class="g-hint">Kaydır, birleştir, 2048'e ulaş!</div><div class="g-score-row"><div class="g-score-box"><div class="g-score-label">PUAN</div><div class="g-score-val" id="s2048">0</div></div><div class="g-score-box"><div class="g-score-label">EN İYİ</div><div class="g-score-val" id="b2048">0</div></div></div><div id="board2048"></div><div class="g-msg" id="msg2048"></div><div class="g-btns"><button class="g-btn" onclick="init2048()">Yeni Oyun</button><button class="g-btn" onclick="undo2048()">↩ Geri Al</button></div>`;g2.best=parseInt(localStorage.getItem('best2048')||'0');init2048();}
+function init2048(){g2.grid=Array(4).fill(null).map(()=>Array(4).fill(0));g2.score=0;g2.over=false;g2.prev=null;addTile2048();addTile2048();draw2048();const m=document.getElementById('msg2048');if(m)m.textContent='';}
+function addTile2048(){const empty=[];for(let r=0;r<4;r++)for(let c=0;c<4;c++)if(!g2.grid[r][c])empty.push([r,c]);if(!empty.length)return;const[r,c]=empty[Math.floor(Math.random()*empty.length)];g2.grid[r][c]=Math.random()<0.9?2:4;}
+function draw2048(){const b=document.getElementById('board2048');if(!b)return;b.innerHTML='';for(let r=0;r<4;r++)for(let c=0;c<4;c++){const v=g2.grid[r][c];const el=document.createElement('div');el.className='c2048'+(v?' v'+v:'');el.textContent=v||'';b.appendChild(el);}const s=document.getElementById('s2048');if(s)s.textContent=g2.score;g2.best=Math.max(g2.best,g2.score);localStorage.setItem('best2048',g2.best);const bx=document.getElementById('b2048');if(bx)bx.textContent=g2.best;}
+function slide2048(row){let arr=row.filter(x=>x);let merged=false;for(let i=0;i<arr.length-1;i++){if(!merged&&arr[i]===arr[i+1]){arr[i]*=2;g2.score+=arr[i];arr.splice(i+1,1);merged=true;}else merged=false;}while(arr.length<4)arr.push(0);return arr;}
+function move2048(dir){if(g2.over||!g2.grid)return;g2.prev=g2.grid.map(r=>[...r]);g2.prevScore=g2.score;let moved=false;const G=g2.grid;if(dir==='left'){for(let r=0;r<4;r++){const s=slide2048(G[r]);if(s.join()!==G[r].join())moved=true;G[r]=s;}}else if(dir==='right'){for(let r=0;r<4;r++){const s=slide2048([...G[r]].reverse()).reverse();if(s.join()!==G[r].join())moved=true;G[r]=s;}}else if(dir==='up'){for(let c=0;c<4;c++){const col=[G[0][c],G[1][c],G[2][c],G[3][c]];const s=slide2048(col);s.forEach((v,r)=>{if(G[r][c]!==v)moved=true;G[r][c]=v;});}}else if(dir==='down'){for(let c=0;c<4;c++){const col=[G[0][c],G[1][c],G[2][c],G[3][c]].reverse();const s=slide2048(col).reverse();s.forEach((v,r)=>{if(G[r][c]!==v)moved=true;G[r][c]=v;});}}if(moved){addTile2048();draw2048();check2048Over();}}
+function check2048Over(){for(let r=0;r<4;r++)for(let c=0;c<4;c++){if(!g2.grid[r][c])return;if(c<3&&g2.grid[r][c]===g2.grid[r][c+1])return;if(r<3&&g2.grid[r][c]===g2.grid[r+1][c])return;}g2.over=true;const m=document.getElementById('msg2048');if(m)m.textContent='Oyun bitti! Tekrar dene 🐻';}
+function undo2048(){if(!g2.prev)return;g2.grid=g2.prev.map(r=>[...r]);g2.score=g2.prevScore;g2.prev=null;g2.over=false;draw2048();const m=document.getElementById('msg2048');if(m)m.textContent='';}
+/* MEMORY */
+const MEM_EM=['🐻','☕','🍰','🎸','🌸','🦋','🍕','🎮'];
+let memCards=[],memFlipped=[],memMatchSet=new Set(),memLock=false,memMoves=0;
+function buildMemory(c){c.innerHTML=`<div class="g-title">🃏 Hafıza Kartı</div><div class="g-hint">Eşleşen kartları bul!</div><div class="g-score-row"><div class="g-score-box"><div class="g-score-label">HAMLE</div><div class="g-score-val" id="mem-moves">0</div></div><div class="g-score-box"><div class="g-score-label">KALAN</div><div class="g-score-val" id="mem-left">8</div></div></div><div id="board-mem"></div><div class="g-msg" id="mem-msg"></div><div class="g-btns"><button class="g-btn" onclick="initMemory()">Yeni Oyun</button></div>`;initMemory();}
+function initMemory(){memCards=[...MEM_EM,...MEM_EM].sort(()=>Math.random()-.5);memFlipped=[];memMatchSet=new Set();memLock=false;memMoves=0;const m=document.getElementById('mem-msg');if(m)m.textContent='';drawMemory();}
+function drawMemory(){const b=document.getElementById('board-mem');if(!b)return;b.innerHTML='';memCards.forEach((em,i)=>{const card=document.createElement('div');card.className='mem-card'+(memMatchSet.has(i)?' matched':'');card.innerHTML=`<span class="mem-back">🐻</span><span class="mem-front">${em}</span>`;if(memFlipped.includes(i)&&!memMatchSet.has(i))card.classList.add('flipped');card.onclick=()=>flipMem(i,card);b.appendChild(card);});const mv=document.getElementById('mem-moves');if(mv)mv.textContent=memMoves;const lf=document.getElementById('mem-left');if(lf)lf.textContent=8-memMatchSet.size/2;}
+function flipMem(i,card){if(memLock||memFlipped.includes(i)||memMatchSet.has(i))return;card.classList.add('flipped');memFlipped.push(i);if(memFlipped.length===2){memMoves++;const[a,b2]=memFlipped;if(memCards[a]===memCards[b2]){memMatchSet.add(a);memMatchSet.add(b2);memFlipped=[];memLock=false;const mv=document.getElementById('mem-moves');if(mv)mv.textContent=memMoves;const lf=document.getElementById('mem-left');if(lf)lf.textContent=8-memMatchSet.size/2;document.querySelectorAll('.mem-card')[a].classList.add('matched');document.querySelectorAll('.mem-card')[b2].classList.add('matched');document.querySelectorAll('.mem-card')[a].classList.remove('flipped');document.querySelectorAll('.mem-card')[b2].classList.remove('flipped');if(memMatchSet.size===16){const m=document.getElementById('mem-msg');if(m)m.textContent='🎉 Tebrikler! '+memMoves+' hamlede!';};}else{memLock=true;setTimeout(()=>{const cards=document.querySelectorAll('.mem-card');if(cards[a])cards[a].classList.remove('flipped');if(cards[b2])cards[b2].classList.remove('flipped');memFlipped=[];memLock=false;const mv=document.getElementById('mem-moves');if(mv)mv.textContent=memMoves;},800);}}}
+/* SNAKE */
+let snakeInterval=null,snake=[],snakeDir={x:1,y:0},snakeFood={x:5,y:5},snakeScore=0,snakeOver=false,snakeNextDir={x:1,y:0};
+const SN=15;
+function buildSnake(c){c.innerHTML=`<div class="g-title">🐍 Yılan</div><div class="g-hint">Yemi ye, büyü, duvara çarpma!</div><div class="g-score-row"><div class="g-score-box"><div class="g-score-label">PUAN</div><div class="g-score-val" id="sn-score">0</div></div></div><div id="board-snake" style="grid-template-columns:repeat(${SN},1fr);width:100%;aspect-ratio:1/1"></div><div class="g-msg" id="sn-msg"></div><div class="dpad"><div></div><button class="dpad-btn" onclick="snDir(0,-1)">▲</button><div></div><button class="dpad-btn" onclick="snDir(-1,0)">◄</button><div style="background:#fdf7f0;border-radius:8px"></div><button class="dpad-btn" onclick="snDir(1,0)">►</button><div></div><button class="dpad-btn" onclick="snDir(0,1)">▼</button><div></div></div><div class="g-btns"><button class="g-btn" onclick="initSnake()">Yeni Oyun</button></div>`;initSnake();}
+function initSnake(){snake=[{x:7,y:7},{x:6,y:7},{x:5,y:7}];snakeDir={x:1,y:0};snakeNextDir={x:1,y:0};snakeScore=0;snakeOver=false;placeSnakeFood();drawSnake();stopSnake();snakeInterval=setInterval(tickSnake,160);const m=document.getElementById('sn-msg');if(m)m.textContent='';}
+function stopSnake(){if(snakeInterval){clearInterval(snakeInterval);snakeInterval=null;}}
+function placeSnakeFood(){do{snakeFood={x:Math.floor(Math.random()*SN),y:Math.floor(Math.random()*SN)};}while(snake.some(s=>s.x===snakeFood.x&&s.y===snakeFood.y));}
+function drawSnake(){const b=document.getElementById('board-snake');if(!b)return;b.innerHTML='';for(let y=0;y<SN;y++)for(let x=0;x<SN;x++){const el=document.createElement('div');const isSn=snake.some(s=>s.x===x&&s.y===y);const isFood=snakeFood.x===x&&snakeFood.y===y;el.className='sncell'+(isSn?' sn':isFood?' food':'');b.appendChild(el);}const s=document.getElementById('sn-score');if(s)s.textContent=snakeScore;}
+function snDir(dx,dy){if(dx!==0&&snakeDir.x!==0)return;if(dy!==0&&snakeDir.y!==0)return;snakeNextDir={x:dx,y:dy};}
+function tickSnake(){if(snakeOver)return;snakeDir=snakeNextDir;const head={x:snake[0].x+snakeDir.x,y:snake[0].y+snakeDir.y};if(head.x<0||head.x>=SN||head.y<0||head.y>=SN||snake.some(s=>s.x===head.x&&s.y===head.y)){snakeOver=true;stopSnake();const m=document.getElementById('sn-msg');if(m)m.textContent='Oyun bitti! 🐍';return;}snake.unshift(head);if(head.x===snakeFood.x&&head.y===snakeFood.y){snakeScore+=10;placeSnakeFood();}else snake.pop();drawSnake();}
+/* TETRIS */
+let tetrisInterval=null,tetBoard=[],tetPiece=null,tetScore=0,tetOver=false;
+const TW=10,TH=18;
+const TSHAPES=[{s:[[1,1,1,1]],c:'#d4a853'},{s:[[1,1],[1,1]],c:'#c8843a'},{s:[[1,1,1],[0,1,0]],c:'#a07830'},{s:[[1,1,1],[1,0,0]],c:'#8B6914'},{s:[[1,1,1],[0,0,1]],c:'#6a4c0c'},{s:[[1,1,0],[0,1,1]],c:'#a04020'},{s:[[0,1,1],[1,1,0]],c:'#b86030'}];
+function buildTetris(c){c.innerHTML=`<div class="g-title">🧱 Tetris</div><div class="g-hint">Satırları doldur, puan kazan!</div><div class="g-score-row"><div class="g-score-box"><div class="g-score-label">PUAN</div><div class="g-score-val" id="tet-score">0</div></div></div><div id="board-tetris" style="grid-template-columns:repeat(${TW},1fr);width:100%;aspect-ratio:${TW}/${TH}"></div><div class="g-msg" id="tet-msg"></div><div class="dpad"><div></div><button class="dpad-btn" onclick="rotateTet()">↻</button><div></div><button class="dpad-btn" onclick="tetMove(-1)">◄</button><button class="dpad-btn" onclick="tetDrop()">▼▼</button><button class="dpad-btn" onclick="tetMove(1)">►</button><div></div><div></div><div></div></div><div class="g-btns"><button class="g-btn" onclick="initTetris()">Yeni Oyun</button></div>`;initTetris();}
+function initTetris(){tetBoard=Array(TH).fill(null).map(()=>Array(TW).fill(0));tetScore=0;tetOver=false;spawnTet();stopTetris();tetrisInterval=setInterval(tickTetris,450);const m=document.getElementById('tet-msg');if(m)m.textContent='';}
+function stopTetris(){if(tetrisInterval){clearInterval(tetrisInterval);tetrisInterval=null;}}
+function spawnTet(){const p=TSHAPES[Math.floor(Math.random()*TSHAPES.length)];tetPiece={shape:p.s,color:p.c,x:Math.floor(TW/2)-1,y:0};if(!canTet(tetPiece,0,0)){tetOver=true;stopTetris();const m=document.getElementById('tet-msg');if(m)m.textContent='Oyun bitti! 🧱';}}
+function canTet(p,dx,dy){return p.shape.every((row,r)=>row.every((v,c)=>{if(!v)return true;const nx=p.x+c+dx,ny=p.y+r+dy;return nx>=0&&nx<TW&&ny<TH&&(ny<0||!tetBoard[ny][nx]);}));}
+function placeTet(){tetPiece.shape.forEach((row,r)=>row.forEach((v,c)=>{if(v&&tetPiece.y+r>=0)tetBoard[tetPiece.y+r][tetPiece.x+c]=tetPiece.color;}));let cleared=0;for(let r=TH-1;r>=0;r--){if(tetBoard[r].every(v=>v)){tetBoard.splice(r,1);tetBoard.unshift(Array(TW).fill(0));cleared++;r++;}}tetScore+=cleared*100;spawnTet();drawTetris();}
+function tickTetris(){if(tetOver)return;if(canTet(tetPiece,0,1))tetPiece.y++;else placeTet();drawTetris();}
+function tetMove(dx){if(tetOver)return;if(canTet(tetPiece,dx,0))tetPiece.x+=dx;drawTetris();}
+function tetDrop(){if(tetOver)return;while(canTet(tetPiece,0,1))tetPiece.y++;placeTet();}
+function rotateTet(){if(tetOver)return;const r=tetPiece.shape[0].length,c2=tetPiece.shape.length;const rot=Array(r).fill(null).map((_,i)=>Array(c2).fill(null).map((_,j)=>tetPiece.shape[c2-j-1][i]));const old=tetPiece.shape;tetPiece.shape=rot;if(!canTet(tetPiece,0,0))tetPiece.shape=old;drawTetris();}
+function drawTetris(){const b=document.getElementById('board-tetris');if(!b)return;const display=tetBoard.map(r=>[...r]);if(tetPiece)tetPiece.shape.forEach((row,r)=>row.forEach((v,c)=>{if(v&&tetPiece.y+r>=0)display[tetPiece.y+r][tetPiece.x+c]=tetPiece.color;}));b.innerHTML='';display.forEach(row=>row.forEach(v=>{const el=document.createElement('div');el.className='tcell'+(v?' filled':'');if(v)el.style.background=v;b.appendChild(el);}));const s=document.getElementById('tet-score');if(s)s.textContent=tetScore;}
+/* WORD */
+const WORDS=['KAHVE','BEYAZ','TATLI','EKMEK','ELMAS','LIMON','DENIZ','ORMAN','MASAL','SEFER'];
+let wordTarget='',wordGuesses=[],wordOver=false;
+function buildWord(c){c.innerHTML=`<div class="g-title">📝 Kelime Bul</div><div class="g-hint">5 harfli Türkçe kelimeyi 6 denemede bul! 🟨=var yanlış yer 🟩=doğru</div><div id="word-guesses" class="word-guesses"></div><div class="g-msg" id="word-msg"></div><div id="word-input-row"><input id="word-input" maxlength="5" placeholder="5 harf..." autocomplete="off" autocorrect="off" autocapitalize="characters"/><button class="g-btn" style="flex:0;padding:.6rem 1rem" onclick="submitWord()">Gir</button></div><div class="g-btns"><button class="g-btn" onclick="initWord()">Yeni Oyun</button></div>`;document.getElementById('word-input').addEventListener('keydown',e=>{if(e.key==='Enter')submitWord();});initWord();}
+function initWord(){wordTarget=WORDS[Math.floor(Math.random()*WORDS.length)];wordGuesses=[];wordOver=false;const m=document.getElementById('word-msg');if(m)m.textContent='';const inp=document.getElementById('word-input');if(inp){inp.value='';inp.focus();}drawWordGuesses();}
+function drawWordGuesses(){const gu=document.getElementById('word-guesses');if(!gu)return;gu.innerHTML='';wordGuesses.forEach(g=>{const row=document.createElement('div');row.className='guess-row';for(let i=0;i<5;i++){const box=document.createElement('div');let cls='w';if(g[i]===wordTarget[i])cls='c';else if(wordTarget.includes(g[i]))cls='p';box.className='guess-box '+cls;box.textContent=g[i];row.appendChild(box);}gu.appendChild(row);});}
+function submitWord(){if(wordOver)return;const inp=document.getElementById('word-input');if(!inp)return;const val=inp.value.toUpperCase().trim();const m=document.getElementById('word-msg');if(val.length!==5){if(m)m.textContent='5 harf giriniz!';return;}wordGuesses.push(val);inp.value='';drawWordGuesses();if(val===wordTarget){if(m)m.textContent='🎉 Tebrikler! Doğru buldunuz!';wordOver=true;return;}if(wordGuesses.length>=6){if(m)m.textContent='Bitti! Kelime: '+wordTarget;wordOver=true;}else{if(m)m.textContent='';}}
+/* RPS */
+let rpsScore={w:0,l:0,d:0};
+function buildRPS(c){c.innerHTML=`<div class="g-title">✊ Taş Kağıt Makas</div><div class="g-hint">Bilgisayara karşı oyna!</div><div class="g-score-row"><div class="g-score-box"><div class="g-score-label">GALİP</div><div class="g-score-val" id="rps-w">0</div></div><div class="g-score-box"><div class="g-score-label">BERAB.</div><div class="g-score-val" id="rps-d">0</div></div><div class="g-score-box"><div class="g-score-label">MAĞLUP</div><div class="g-score-val" id="rps-l">0</div></div></div><div class="rps-choices"><button class="rps-btn" onclick="playRPS('r')" title="Taş">✊</button><button class="rps-btn" onclick="playRPS('p')" title="Kağıt">🖐</button><button class="rps-btn" onclick="playRPS('s')" title="Makas">✌️</button></div><div class="rps-battle" id="rps-battle"><span style="font-size:14px;color:#a8906e">Seçimini yap!</span></div><div class="rps-result" id="rps-result"></div><div class="g-btns"><button class="g-btn" onclick="resetRPS()">Sıfırla</button></div>`;rpsScore={w:0,l:0,d:0};}
+function playRPS(choice){const choices=['r','p','s'],cpu=choices[Math.floor(Math.random()*3)];const icons={r:'✊',p:'🖐',s:'✌️'};const b=document.getElementById('rps-battle');const r=document.getElementById('rps-result');if(b)b.innerHTML=`${icons[choice]}<span class="rps-vs">VS</span>${icons[cpu]}`;let res='';if(choice===cpu){rpsScore.d++;res='<span class="draw">Berabere! 🤝</span>';}else if((choice==='r'&&cpu==='s')||(choice==='p'&&cpu==='r')||(choice==='s'&&cpu==='p')){rpsScore.w++;res='<span class="win">Kazandın! 🎉</span>';}else{rpsScore.l++;res='<span class="lose">Kaybettin! 😔</span>';}if(r)r.innerHTML=res;const w=document.getElementById('rps-w'),d=document.getElementById('rps-d'),l=document.getElementById('rps-l');if(w)w.textContent=rpsScore.w;if(d)d.textContent=rpsScore.d;if(l)l.textContent=rpsScore.l;}
+function resetRPS(){rpsScore={w:0,l:0,d:0};buildRPS(document.getElementById('game-container'));}
+/* KEYBOARD & TOUCH */
+document.addEventListener('keydown',e=>{
+  if(currentGame==='2048'){const m={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'};if(m[e.key]){e.preventDefault();move2048(m[e.key]);}}
+  if(currentGame==='tetris'){if(e.key==='ArrowLeft')tetMove(-1);else if(e.key==='ArrowRight')tetMove(1);else if(e.key==='ArrowUp')rotateTet();else if(e.key==='ArrowDown')tetDrop();}
+  if(currentGame==='snake'){const m={ArrowLeft:{x:-1,y:0},ArrowRight:{x:1,y:0},ArrowUp:{x:0,y:-1},ArrowDown:{x:0,y:1}};if(m[e.key]){e.preventDefault();const d=m[e.key];snDir(d.x,d.y);}}
 });
+let tx=0,ty=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.max(Math.abs(dx),Math.abs(dy))<25)return;
+  const horiz=Math.abs(dx)>Math.abs(dy);
+  if(currentGame==='2048'){if(horiz)move2048(dx>0?'right':'left');else move2048(dy>0?'down':'up');}
+  if(currentGame==='snake'){if(horiz)snDir(dx>0?1:-1,0);else snDir(0,dy>0?1:-1);}
+},{passive:true});
+window.addEventListener('DOMContentLoaded',()=>{const saved=localStorage.getItem('bear_lang');if(saved)setLang(saved);});
 </script>
 </body>
 </html>
